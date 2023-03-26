@@ -11,24 +11,24 @@ async function openAi(req, res) {
   
     try {
       response = await openai.createCompletion({
-        model: "code-davinci-002",
-        prompt:
-          "### Postgres SQL tables, with their properties:\n#\n# Employee(id, name, department_id)\n# Department(id, name, address)\n# Salary_Payments(id, employee_id, amount, date)\n#\n### A query to list the names of the departments which employed more than 10 employees in the last 3 months\nSELECT",
-        temperature: 0,
-        max_tokens: 150,
+        model: "text-davinci-003",
+        prompt: "Create a SQL request to find all users who live in California and have over 1000 credits:",
+        temperature: 0.3,
+        max_tokens: 60,
         top_p: 1.0,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
-        stop: ["#", ";"],
       });
     } catch (error) {
-      console.log(error);
-      response = "Error";
+      return res.status(401).json({
+        message: 'error',
+        response: error
+      })
     }
   
     res.status(200).json({
       message: "success",
-      data: response,
+      data: response.data,
     });
   }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Prompt from './Prompt';
+import Prompt from "./Prompt";
 
 const Hero = () => {
   return (
@@ -40,9 +40,9 @@ const Hero = () => {
             </h1>
 
             <p className="mt-6 px-20 text-lg leading-8 text-gray-600">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-              lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-              fugiat aliqua.
+              Want to make querying databases a breeze? Use a natural language
+              to SQL converter to translate human language questions into
+              database query code.
             </p>
 
             {/* <div class="mt-10 flex items-center justify-center gap-x-6">
@@ -50,8 +50,6 @@ const Hero = () => {
                             <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
                         </div> */}
             <Prompt />
-
-
           </div>
         </div>
       </div>

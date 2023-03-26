@@ -9,10 +9,10 @@ const Home = () => {
       <Navbar />
 
       <div className="conatiner mx-auto border-gray-900">
-      <Hero />
+        <Hero />
       </div>
 
-      {/* <Footer /> */}
+      <Footer />
     </>
   )
 }

@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import { config } from "dotenv";
 
-import openAi  from './controller/openai.js';
+import openAiController  from './controller/openai.js';
 
 config({
   path: "./process.env",
@@ -23,10 +23,10 @@ app.use(
 );
 
 //routes
-app.use("/api/v1/query", openAi);
+app.use("/api/v1/query", openAiController);
 
 //server
-const port = 8000;
+const port = 8000 || process.env.PORT;
 app.listen(port, () => {
   console.log("Server is listing on port " + port);
 });
