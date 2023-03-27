@@ -8,7 +8,7 @@ const Prompt = () => {
 
     const apiBody = {
         "model": "text-davinci-003",
-        "prompt": userPrompt,
+        "prompt": "Write an SQL Query of this " + userPrompt + ". Also check if this is a valid SQL query. If not - return the following: 'This is not a valid SQL query.' - If it is a valid query, then only return the SQL query.",
         "temperature": 0.3,
         "max_tokens": 60,
         "top_p": 1.0,
