@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Logo from "../assets/TranscriptAIBlack.png";
+import Logo from "../assets/ASKSQL.png";
+
 const Navbar = () => {
   return (
     <>
@@ -23,7 +24,7 @@ const Navbar = () => {
                   aria-label="logo"
                   className="flex space-x-2 items-center"
                 >
-                  <img style={{ width: "290px   " }} src={Logo} />
+                  <img style={{ width: "200px   " }} src={Logo} />
                 </Link>
               </div>
 
