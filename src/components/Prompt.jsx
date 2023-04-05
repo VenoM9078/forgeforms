@@ -1,54 +1,75 @@
 import React, { useState } from "react";
-import { FilePond, registerPlugin } from 'react-filepond'
-import 'filepond/dist/filepond.min.css'
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
 import axios from "axios";
 import Tabs from "./Tabs";
 import TabOne from "./TabOne";
 
 const Prompt = () => {
-    const [userPrompt, setPrompt] = useState("");
-    const [result, setResult] = useState({});
-    const [loading, setLoading] = useState(false);
+  const [userPrompt, setPrompt] = useState("");
+  const [result, setResult] = useState({});
+  const [loading, setLoading] = useState(false);
 
-    function handleInput(e) {
-        setPrompt(e.target.value);
-    }
+  function handleInput(e) {
+    setPrompt(e.target.value);
+  }
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        axios
-            .post("http://127.0.0.1:8000/api/v1/sql-query", userPrompt)
-            .then((responce) => {
-                setPrompt("");
-                console.log(responce.data)
-                setResult(responce);
-                setLoading(true);  
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
+  function handleSubmit(e) {
+    e.preventDefault();
 
-    // const uploadFile = ;
+    const requestBody = JSON.stringify({ query: userPrompt });
 
-    return (
-        <>
-            <div className="mx-auto mt-20 h-[400px] w-full max-w-screen-md rounded-lg p-6 shadow-lg shadow-purple-500/40">
-                <Tabs
-                    data={[
-                        {
-                            label: "Upload Schema",
-                            content: "This is the content for Tab 2.",
-                        },
-                        {
-                            label: "Ask Query",
-                            content: <TabOne result={result} handleInput={handleInput} userPrompt={userPrompt} handleSubmit={handleSubmit} loading={loading} />,
-                        },
-                    ]}
+    fetch("http://127.0.0.1:8000/api/v1/sql-query", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestBody,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setResult(data);
+        setLoading(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  // const uploadFile = ;
+
+  return (
+    <>
+      <div className="mx-auto mt-20 h-[400px] w-full max-w-screen-md rounded-lg p-6 shadow-lg shadow-purple-500/40">
+        <Tabs
+          data={[
+            {
+              label: "Upload Schema",
+              content: "This is the content for Tab 2.",
+            },
+            {
+              label: "Ask Query",
+              content: (
+                <TabOne
+                  result={result}
+                  handleInput={handleInput}
+                  userPrompt={userPrompt}
+                  handleSubmit={handleSubmit}
+                  loading={loading}
                 />
-            </div>
-        </>
-    );
+              ),
+            },
+          ]}
+        />
+      </div>
+    </>
+  );
 };
 
 export default Prompt;

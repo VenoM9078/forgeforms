@@ -1,16 +1,18 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import { config } from "dotenv";
+require("./env.js");
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const openaiRoute = require("./controller/openai.js");
 
-import openAiController from './controller/openai.js';
-
-config({
-  path: "./process.env",
+dotenv.config({
+  path: "./.env",
 });
 
 const app = express();
+
+app.use(express.json());
 
 //Middle
 app.use(cors());
@@ -23,7 +25,7 @@ app.use(
 app.use(bodyParser.json());
 
 //routes
-app.post("/api/v1/sql-query", openAiController);
+app.use("/api/v1", openaiRoute);
 
 //server
 const port = 8000 || process.env.PORT;
@@ -31,4 +33,4 @@ app.listen(port, () => {
   console.log("Server is listing on port " + port);
 });
 
-export default app;
+module.exports = app;
