@@ -27,6 +27,7 @@ const Prompt = () => {
       body: requestBody,
     })
       .then((response) => {
+        setLoading(false);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -34,7 +35,10 @@ const Prompt = () => {
       })
       .then((data) => {
         setResult(data);
-        setLoading(true);
+ 
+        setTimeout(() => {
+            setLoading(true);
+        }, 3000)
       })
       .catch((error) => {
         console.error(error);
@@ -49,10 +53,6 @@ const Prompt = () => {
         <Tabs
           data={[
             {
-              label: "Upload Schema",
-              content: "This is the content for Tab 2.",
-            },
-            {
               label: "Ask Query",
               content: (
                 <TabOne
@@ -63,6 +63,10 @@ const Prompt = () => {
                   loading={loading}
                 />
               ),
+            },
+            {
+              label: "Upload Schema",
+              content: "This is the content for Tab 2.",
             },
           ]}
         />

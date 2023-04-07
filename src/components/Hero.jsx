@@ -35,7 +35,7 @@ const Hero = () => {
           <div className="text-center">
             <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               <TextLoop 
-              springConfig={{ stiffness: 180, damping: 80 }}
+              springConfig={{ stiffness: 200, damping: 80 }}
               fade={true}
               interval={5000}    
               adjustingSpeed={750}          
