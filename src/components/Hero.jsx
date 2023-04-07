@@ -1,5 +1,6 @@
 import React from "react";
 import Prompt from "./Prompt";
+import TextLoop from "react-text-loop";
 
 const Hero = () => {
   return (
@@ -33,7 +34,17 @@ const Hero = () => {
         <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-16">
           <div className="text-center">
             <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              The Easy Way to Write Queries
+              <TextLoop 
+              springConfig={{ stiffness: 180, damping: 80 }}
+              fade={true}
+              interval={5000}    
+              adjustingSpeed={750}          
+              >
+                
+                <span>The Easy Way to Write Queries</span>
+                <span>The Efficent Way to Solve Queries</span>
+                <span>The AI Way of Solve Queries</span>
+              </TextLoop>
             </h1>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl ">
               Natural Language to SQL
@@ -44,7 +55,7 @@ const Hero = () => {
               to SQL converter to translate human language questions into
               database query code.
             </p>
-            
+
             <Prompt />
           </div>
         </div>

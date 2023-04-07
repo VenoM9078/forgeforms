@@ -1,19 +1,26 @@
-import { TypeAnimation } from 'react-type-animation';
+// import { TypeAnimation } from 'react-type-animation';
+import { WindupChildren } from "windups";
 
 const TextLoadingAnimatiom = ({query}) => {
 
-  const regex = /[,\s]+/;
-    let splitQuery = query.toString().split(regex);
-    console.log("Split query: " + splitQuery)
+    // let splitQuery = query.data.toString().split(" ");
+    // console.log(splitQuery)
 
     return (
-      <TypeAnimation
-        sequence={splitQuery}
-        wrapper="p"
-        cursor={true}
-        repeat={0}
-        style={{ fontSize: '1em' }}
-      />
+      // <TypeAnimation
+      // sequence={[
+      //   'One',
+      //   'Two', 
+      //   'Two Three'
+      // ]}
+      //   wrapper="span"
+      //   cursor={true}
+      //   repeat={0}
+      //   style={{ fontSize: '1em' }}
+      // />
+      <WindupChildren>
+      <p>{query.data}</p>
+    </WindupChildren>
     );
   };
   

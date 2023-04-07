@@ -33,7 +33,6 @@ const Prompt = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setResult(data);
         setLoading(true);
       })
