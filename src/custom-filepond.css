@@ -1,0 +1,14 @@
+/* Center the FilePond container */
+.filepond--root {
+    width: 100%; /* Reduce the width */
+    margin: 0 auto; /* Center the container horizontally */
+    border-radius: 4px;
+    margin-top: 90px;
+    margin-bottom: 30px;
+  }
+  
+  /* Center the FilePond label */
+  .filepond--label {
+    text-align: center;
+  }
+  

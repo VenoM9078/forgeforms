@@ -4,7 +4,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+
+
 const openaiRoute = require("./controller/openai.js");
+const fileUploadRoute = require("./controller/fileupload.js");
 
 dotenv.config({
   path: "./.env",
@@ -25,7 +28,8 @@ app.use(
 app.use(bodyParser.json());
 
 //routes
-app.use("/api/v1", openaiRoute);
+app.use("/api/v1/query", openaiRoute);
+app.use("/api/v1/file", fileUploadRoute);
 
 //server
 const port = 8000 || process.env.PORT;

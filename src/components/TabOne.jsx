@@ -6,7 +6,8 @@ export default function tabOne({
   handleInput,
   loading,
   result,
-}) {
+})
+ {
   return (
     <div className="relative flex h-full flex-col">
       <div className="relative h-10 border-b border-purple-300">
@@ -22,9 +23,11 @@ export default function tabOne({
               spellCheck="false"
               value={userPrompt}
               onChange={handleInput}
+              required
             />
+            
             <button className="text-purple-600" type="submit">
-              {loading ? (
+              {!loading ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -42,8 +45,8 @@ export default function tabOne({
                 <div role="status">
                   <svg
                     aria-hidden="true"
-                    class="mr-2 inline h-4 w-6 animate-spin fill-purple-600 text-gray-200 dark:text-gray-600"
-                    viewBox="0 0 100 101"
+                    className="mr-2 inline h-4 w-6 animate-spin fill-purple-600 text-gray-200 dark:text-gray-600"
+                    viewBox="0 0 90 90"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -64,7 +67,7 @@ export default function tabOne({
       </div>
       <div className="mt-6 h-[240px] w-full max-w-screen-md overflow-y-auto rounded">
         <code className="text-start">
-          {loading && <TextLoadingAnimatiom query={result} />}
+          {!loading && <TextLoadingAnimatiom query={result} />}
         </code>
       </div>
     </div>
