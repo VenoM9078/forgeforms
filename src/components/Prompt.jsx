@@ -50,11 +50,9 @@ const Prompt = () => {
       });
   }
 
-  // const uploadFile = ;
-
   return (
     <>
-      <div className="mx-auto mt-20 h-[400px] items w-full max-w-screen-md rounded-lg p-6 shadow-lg shadow-purple-500/40">
+      <div className="mx-auto mt-20 h-[400px] border items w-full max-w-screen-md rounded-lg p-6 shadow-lg shadow-purple-500/40">
         <Tabs
           data={[
             {

@@ -5,7 +5,7 @@ import Logo from "../assets/ASKSQL.png";
 const Navbar = () => {
   return (
     <>
-      <header className="py-5">
+      <header className="py-5 border-b">
         <input
           type="checkbox"
           name="hbr"

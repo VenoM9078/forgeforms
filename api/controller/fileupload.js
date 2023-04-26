@@ -53,6 +53,7 @@ router.post("/handle", async (req, res, next) => {
     // Delete the existing file
     // fs.unlinkSync(filePath);
 
+    //upload the file to cloudinary
     const result = await cloudinary.uploader.upload(filePath, {
       resource_type: "raw",
     });
@@ -65,7 +66,7 @@ router.post("/handle", async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 });
 
@@ -74,27 +75,37 @@ router.use(async (req, res) => {
     const response = await fetch(req.url);
     const fileContent = await response.text();
 
+    //clean the SQL Schema
     let cleanStatement = parseSQLContent(`${fileContent}`, ["CREATE TABLE"]);
+
+    //update the existing local Schema file with clean statements
     fs.writeFileSync(req.filePath, `${cleanStatement[0]}`, "utf8");
 
-    await cloudinary.uploader.upload(req.filePath, {
-      resource_type: "raw",
-      public_id: req.publicId,
-    }, function (error, result) {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(result);
+    //update the existing file content on cloudinary
+    await cloudinary.uploader.upload(
+      req.filePath,
+      {
+        resource_type: "raw",
+        public_id: req.publicId,
+      },
+      function (error, result) {
+        if (error) {
+          return res.status(500).json({ error: error });
+        }
       }
-    });
+    );
 
-    // Delete the existing file
+    // Delete the existing local file
     fs.unlinkSync(req.filePath);
 
-    res.status(200).json({ data: cleanStatement });
+    res.status(200).json({ public_id: req.publicId, secureUrl: req.url });
   } catch (error) {
-    console.error("Error fetching file:", error);
+    res.status(500).json({ error: error });
   }
+});
+
+router.post('/ask', (req, res) => {
+  res.status(200).json({ message: "My Responce"});
 });
 
 module.exports = router;
