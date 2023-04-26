@@ -32,7 +32,8 @@ const TabTwo = () => {
         return navigate(`/question`)
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
+        alert(err.message);
       });
   };
 
