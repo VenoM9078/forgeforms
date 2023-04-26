@@ -13,7 +13,7 @@ const TabTwo = () => {
   const navigate = useNavigate();
   const [schemaFile, setSchemaFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  const [fileContent, setFileContent] = useState(null);
+  const [filePath, setFilePath] = useState("");
 
   const handleFileUpload = (fileItems) => {
     if (fileItems.length > 0) {
@@ -27,15 +27,17 @@ const TabTwo = () => {
     event.preventDefault();
 
     axios
-      .post("http://127.0.0.1:8000/api/v1/file/handle", { file: fileName, fileContent: fileContent})
+      .post("http://127.0.0.1:8000/api/v1/file/handle", { fileName: fileName, filePath: filePath})
       .then((data) => {
         return navigate(`/question`)
       })
       .catch((err) => {
-        console.log(err)
-        alert(err.message);
+        // console.log(err.stacktrace);
+        alert(err);
       });
   };
+
+  const maxFileSize = '3MB';
 
   return (
     <div className="">
@@ -44,6 +46,7 @@ const TabTwo = () => {
           name="file"
           acceptedFileTypes={["application/sql", ".ddl", ".sql"]}
           allowMultiple={false}
+          maxFileSize={maxFileSize}
           data-max-files={1}
           server="http://127.0.0.1:8000/api/v1/file/upload"
           labelIdle='Drag & Drop your SQL schema file or <span class="filepond--label-action">Browse</span>'
@@ -61,8 +64,9 @@ const TabTwo = () => {
           onprocessfile={(error, file) => {
                 if (!error) {
                   const jsonObject = JSON.parse(file.serverId);
+                  // console.log(jsonObject)
                   setFileName(jsonObject.file);
-                  setFileContent(jsonObject.fileContent);
+                  setFilePath(jsonObject.filePath);
                 }
               }}
         />
