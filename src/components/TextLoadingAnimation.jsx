@@ -29,9 +29,9 @@ const TextLoadingAnimatiom = ({ query }) => {
       {splitQuery.length > 1 ? (
         <p>
           <div className="relative">
-            <p>{splitQuery[0]}</p>
+            <p className="font-bold">{splitQuery[0]}</p>
             <button
-              className="absolute top-0 right-0 py-1 px-2 text-white bg-purple-500 rounded hover:bg-blue-600 transition-all duration-200"
+              className="absolute top-50 right-0 py-1 px-2 text-white bg-purple-500 rounded hover:bg-blue-600 transition-all duration-200"
               onClick={copyToClipboard}
             >
               <FaClipboard />

@@ -9,7 +9,12 @@ const Prompt = () => {
   const [userPrompt, setPrompt] = useState("");
   const [result, setResult] = useState({});
   const [loading, setLoading] = useState(false);
-
+  
+  function SQLPromptFiller(propmt) {
+    return `create an SQL query from the following natural language request ${propmt} .If the request cannot be accurately converted into an SQL query, please suggest explanation and modifications to the request to make it compatible with the converter tool.`;
+  }
+  
+  
   function handleInput(e) {
     setPrompt(e.target.value);
   }
@@ -19,10 +24,12 @@ const Prompt = () => {
 
     if(userPrompt.trim() === '') {
         
-        return console.error("Please enter prompt");
+        return window.alert("Please enter prompt");
     }
 
-    const requestBody = JSON.stringify({ query: userPrompt });
+    const paramPrompt = SQLPromptFiller(userPrompt);
+
+    const requestBody = JSON.stringify({ query: paramPrompt });
 
     fetch("http://127.0.0.1:8000/api/v1/query/sql-query", {
       method: "POST",

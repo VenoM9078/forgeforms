@@ -1,17 +1,71 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import TextLoadingAnimatiom from "../components/TextLoadingAnimation";
+import { useLocation } from "react-router-dom";
 
 const Question = () => {
+  
+  const location = useLocation();
+
+  const schema = location.state.schema;
+  const promptStart = `Here is my SQL Schema : "${schema}" ,of relational database and now I would like to ask some questions or queries based on that provided schema. My Question is : `;
+
   const [loading, setLoading] = useState(false);
+  const [userPrompt, setPrompt] = useState("");
+  // const [result, setResult] = useState([]);
+  const [result, setResult] = useState(null);
+
+  function handleInput(e) {
+    setPrompt(e.target.value);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    
+    if (userPrompt.trim() === "") {
+      return window.alert("Please enter prompt");
+    }
+    
+    const promptParams = `${promptStart} ${userPrompt}.`;
+    console.log(promptParams);
+
+    const requestBody = JSON.stringify({ query: promptParams });
+
+    fetch("http://127.0.0.1:8000/api/v1/query/sql-query", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestBody,
+    })
+      .then((response) => {
+        setLoading(true);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // setResult([...result, data]);
+        setResult(data)
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   return (
     <>
       <Navbar />
-      <section className="px-11 mt-10 mb-20">
-        <div className="items mx-auto h-[600px] max-w-full border rounded-xl p-6 shadow-lg shadow-purple-500/40">
+      <section className="mt-10 mb-20 px-11">
+        <div className="items mx-auto h-[600px] max-w-full rounded-xl border p-6 shadow-lg shadow-purple-500/40">
           <div className="relative h-10 border-b border-purple-300">
-            <form onSubmit={null}>
+            <form onSubmit={handleSubmit}>
               <div className="inline-flex w-full">
                 <input
                   type="text"
@@ -21,8 +75,8 @@ const Question = () => {
                   autoCorrect="off"
                   autoCapitalize="none"
                   spellCheck="false"
-                  value={null}
-                  onChange={null}
+                  value={userPrompt}
+                  onChange={handleInput}
                   required
                 />
 
@@ -65,10 +119,13 @@ const Question = () => {
               </div>
             </form>
           </div>
-          <div className="mt-6 h-[500px] w-full max-w-screen-md overflow-y-auto rounded">
+          <div className="mt-6 h-[480px] w-full max-w-full overflow-y-auto rounded">
             <code className="text-start">
-              {/* {!loading && <TextLoadingAnimatiom query={result} />} */}
-              <p>lore</p>
+              {/* {!loading && result.map((ele, index) => {
+                return <TextLoadingAnimatiom query={ele} />
+              })} */}
+              {/* {!loading && <TextLoadingAnimatiom query={result[result.length - 1]} />} */}
+              {!loading && <TextLoadingAnimatiom query={result} />}
             </code>
           </div>
         </div>

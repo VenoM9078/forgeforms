@@ -87,18 +87,13 @@ router.use(async (req, res) => {
       {
         resource_type: "raw",
         public_id: req.publicId,
-      },
-      function (error, result) {
-        if (error) {
-          return res.status(500).json({ error: error });
-        }
       }
     );
 
     // Delete the existing local file
     fs.unlinkSync(req.filePath);
 
-    res.status(200).json({ public_id: req.publicId, secureUrl: req.url });
+    res.status(200).json({ schema: cleanStatement[0] });
   } catch (error) {
     res.status(500).json({ error: error });
   }

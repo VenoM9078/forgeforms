@@ -15,7 +15,7 @@ const TabTwo = () => {
   const [schemaFile, setSchemaFile] = useState(null);
   const [fileName, setFileName] = useState("");
   const [filePath, setFilePath] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const handleFileUpload = (fileItems) => {
     if (fileItems.length > 0) {
@@ -29,19 +29,20 @@ const TabTwo = () => {
     event.preventDefault();
 
     //handle loading page
-    setLoading(!loading);
-    console.log(loading)
+    setLoading(!isLoading);
+    console.log(isLoading)
 
     //request to handle route
     axios
       .post("http://127.0.0.1:8000/api/v1/file/handle", { fileName: fileName, filePath: filePath })
       .then((data) => {
-        setLoading(!loading);
-        return navigate(`/question`, {state: data});
+        setLoading(!isLoading);
+        return navigate(`/question`, {state: {
+          schema: data.data.schema
+        }});
       })
       .catch((err) => {
-        // console.log(err.stacktrace);
-        setLoading(!loading);
+        setLoading(!isLoading);
         alert(err);
       });
   };
@@ -50,7 +51,7 @@ const TabTwo = () => {
 
   return (
     <>
-      <LoadingScreen isLoading={loading} />
+      <LoadingScreen isLoading={isLoading} />
       <div className="">
         <form onSubmit={handleUpload}>
           <FilePond

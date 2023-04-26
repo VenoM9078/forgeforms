@@ -13,7 +13,7 @@ router.post("/sql-query", async (req, res) => {
   try {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `create an SQL query from the following natural language request: "${req.body.query}. If the request cannot be accurately converted into an SQL query, please suggest explanation and modifications to the request to make it compatible with the converter tool."`,
+      prompt: `"${req.body.query}. if GPT's initial response is incomplete, try to complete it.`,
       temperature: 0.4,
       max_tokens: 64,
       top_p: 1,
