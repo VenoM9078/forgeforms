@@ -5,7 +5,7 @@ import TextLoop from "react-text-loop";
 const Hero = () => {
   return (
     <>
-      <div className="px-50 relative isolate border pt-14 lg:px-8">
+      <div className="px-50 relative isolate pt-14 lg:px-8">
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
           <svg
             className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"

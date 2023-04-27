@@ -5,7 +5,7 @@ import { FaClipboard } from 'react-icons/fa';
 const TextLoadingAnimatiom = ({ query }) => {
   const [copied, setCopied] = useState(false);
   let splitQuery = [];
-
+  console.log(query)
   if (query && query.data) {
     splitQuery = query.data.toString().split(";");
     console.log(splitQuery);

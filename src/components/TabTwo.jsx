@@ -5,17 +5,17 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "../custom-filepond.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import LoadingScreen from "./LoadingScreen"
+import { FiUpload, FiCheck } from "react-icons/fi";
 
 registerPlugin(FilePondPluginFileValidateType);
 
 const TabTwo = () => {
-
   const navigate = useNavigate();
   const [schemaFile, setSchemaFile] = useState(null);
   const [fileName, setFileName] = useState("");
   const [filePath, setFilePath] = useState("");
-  const [isLoading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
 
   const handleFileUpload = (fileItems) => {
     if (fileItems.length > 0) {
@@ -29,29 +29,37 @@ const TabTwo = () => {
     event.preventDefault();
 
     //handle loading page
-    setLoading(!isLoading);
-    console.log(isLoading)
+    setIsUploading(!isUploading);
 
     //request to handle route
     axios
-      .post("http://127.0.0.1:8000/api/v1/file/handle", { fileName: fileName, filePath: filePath })
+      .post("http://127.0.0.1:8000/api/v1/file/handle", {
+        fileName: fileName,
+        filePath: filePath,
+      })
       .then((data) => {
-        setLoading(!isLoading);
-        return navigate(`/question`, {state: {
-          schema: data.data.schema
-        }});
+        setIsUploading(!isUploading);
+        setIsUploaded(!isUploaded);
+
+        return setTimeout(() => {
+          navigate(`/question`, {
+            state: {
+              schema: data.data.schema,
+            },
+          });
+        }, 2000);
       })
       .catch((err) => {
-        setLoading(!isLoading);
+        setIsUploading(!isUploading);
         alert(err);
       });
   };
 
-  const maxFileSize = '20MB';
+  const maxFileSize = "20MB";
 
   return (
     <>
-      <LoadingScreen isLoading={isLoading} />
+      {/* <LoadingScreen /> */}
       <div className="">
         <form onSubmit={handleUpload}>
           <FilePond
@@ -86,9 +94,32 @@ const TabTwo = () => {
             className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
             type="submit"
             onClick={handleUpload}
-            disabled={!schemaFile}
+            disabled={isUploading || isUploaded}
           >
-            Upload
+            {isUploading ? (
+              <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
+                ></path>
+              </svg>
+            ) : (
+              <><FiUpload className="mr-2 h-5 w-5" /> </> 
+            )}
+            {isUploaded ? (
+              <FiCheck className="mr-2 h-5 w-5" />
+            ) : (
+              <span>Upload</span>
+            )}
           </button>
         </form>
       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { HashLoader, ScaleLoader, SquareLoader } from "react-spinners";
 
-const LoadingScreen = ({ isLoading }) => {
+const LoadingScreen = () => {
   const override = `
     display: block;
     position: absolute;
@@ -15,7 +15,7 @@ const LoadingScreen = ({ isLoading }) => {
 
   return (
     <>
-      {isLoading && (
+      
         <div
           className="fixed w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-neutral-900 text-white"
           style={{ zIndex: "9999" }}
@@ -28,7 +28,7 @@ const LoadingScreen = ({ isLoading }) => {
           </h1>
           <HashLoader color={"#fff"} loading={true} css={override} size={50} />
         </div>
-      )}
+      
     </>
   );
 };

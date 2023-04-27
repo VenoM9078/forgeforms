@@ -77,30 +77,31 @@ router.use(async (req, res) => {
 
     //clean the SQL Schema
     let cleanStatement = parseSQLContent(`${fileContent}`, ["CREATE TABLE"]);
+    // console.log(cleanStatement);
 
     //update the existing local Schema file with clean statements
-    fs.writeFileSync(req.filePath, `${cleanStatement[0]}`, "utf8");
+    // fs.writeFileSync(req.filePath, `${cleanStatement}`, "utf8");
 
     //update the existing file content on cloudinary
-    await cloudinary.uploader.upload(
-      req.filePath,
-      {
-        resource_type: "raw",
-        public_id: req.publicId,
-      }
-    );
+    // await cloudinary.uploader.upload(
+    //   req.filePath,
+    //   {
+    //     resource_type: "raw",
+    //     public_id: req.publicId,
+    //   }
+    // );
+
+    //delete the file from cloudinary
+    await cloudinary.uploader.destroy(req.publicId);
 
     // Delete the existing local file
     fs.unlinkSync(req.filePath);
 
-    res.status(200).json({ schema: cleanStatement[0] });
+    res.status(200).json({ schema: cleanStatement });
   } catch (error) {
     res.status(500).json({ error: error });
   }
 });
 
-router.post('/ask', (req, res) => {
-  res.status(200).json({ message: "My Responce"});
-});
 
 module.exports = router;

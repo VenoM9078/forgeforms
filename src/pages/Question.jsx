@@ -3,9 +3,9 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TextLoadingAnimatiom from "../components/TextLoadingAnimation";
 import { useLocation } from "react-router-dom";
+import { WindupChildren } from "windups";
 
 const Question = () => {
-  
   const location = useLocation();
 
   const schema = location.state.schema;
@@ -14,7 +14,7 @@ const Question = () => {
   const [loading, setLoading] = useState(false);
   const [userPrompt, setPrompt] = useState("");
   // const [result, setResult] = useState([]);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState("");
 
   function handleInput(e) {
     setPrompt(e.target.value);
@@ -22,17 +22,17 @@ const Question = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    
+
     if (userPrompt.trim() === "") {
       return window.alert("Please enter prompt");
     }
-    
+
     const promptParams = `${promptStart} ${userPrompt}.`;
     console.log(promptParams);
 
     const requestBody = JSON.stringify({ query: promptParams });
 
-    fetch("http://127.0.0.1:8000/api/v1/query/sql-query", {
+    fetch("http://127.0.0.1:8000/api/v1/schema/schema-query", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,9 +46,10 @@ const Question = () => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then((res) => {
         // setResult([...result, data]);
-        setResult(data)
+        console.log(res.data.content);
+        setResult(res.data.content);
 
         setTimeout(() => {
           setLoading(false);
@@ -125,7 +126,11 @@ const Question = () => {
                 return <TextLoadingAnimatiom query={ele} />
               })} */}
               {/* {!loading && <TextLoadingAnimatiom query={result[result.length - 1]} />} */}
-              {!loading && <TextLoadingAnimatiom query={result} />}
+              {!loading && (
+                <WindupChildren>
+                  <p className="text-red-800">{result}</p>
+                </WindupChildren>
+              )}
             </code>
           </div>
         </div>

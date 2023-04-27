@@ -4,14 +4,14 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+dotenv.config({
+  path: "./.env",
+});
 
 
 const openaiRoute = require("./controller/openai.js");
 const fileUploadRoute = require("./controller/fileupload.js");
-
-dotenv.config({
-  path: "./.env",
-});
+const fileBasedQuery = require("./controller/fileBasedQuery.js");
 
 const app = express();
 
@@ -30,6 +30,7 @@ app.use(bodyParser.json());
 //routes
 app.use("/api/v1/query", openaiRoute);
 app.use("/api/v1/file", fileUploadRoute);
+app.use("/api/v1/schema", fileBasedQuery);
 
 //server
 const port = 8000 || process.env.PORT;

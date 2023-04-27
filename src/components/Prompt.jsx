@@ -7,7 +7,7 @@ import TabTwo from "./TabTwo";
 
 const Prompt = () => {
   const [userPrompt, setPrompt] = useState("");
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState(" ");
   const [loading, setLoading] = useState(false);
   
   function SQLPromptFiller(propmt) {

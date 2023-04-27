@@ -13,9 +13,9 @@ router.post("/sql-query", async (req, res) => {
   try {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `"${req.body.query}. if GPT's initial response is incomplete, try to complete it.`,
+      prompt: `"${req.body.query}.`,
       temperature: 0.4,
-      max_tokens: 64,
+      max_tokens: 200,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
