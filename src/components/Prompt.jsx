@@ -9,12 +9,11 @@ const Prompt = () => {
   const [userPrompt, setPrompt] = useState("");
   const [result, setResult] = useState(" ");
   const [loading, setLoading] = useState(false);
-  
+
   function SQLPromptFiller(propmt) {
     return `create an SQL query from the following natural language request ${propmt} .If the request cannot be accurately converted into an SQL query, please suggest explanation and modifications to the request to make it compatible with the converter tool.`;
   }
-  
-  
+
   function handleInput(e) {
     setPrompt(e.target.value);
   }
@@ -22,16 +21,15 @@ const Prompt = () => {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if(userPrompt.trim() === '') {
-        
-        return window.alert("Please enter prompt");
+    if (userPrompt.trim() === "") {
+      return window.alert("Please enter prompt");
     }
 
     const paramPrompt = SQLPromptFiller(userPrompt);
 
     const requestBody = JSON.stringify({ query: paramPrompt });
 
-    fetch("http://127.0.0.1:8000/api/v1/query/sql-query", {
+    fetch("http://localhost:8000/api/v1/query/sql-query", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,10 +45,10 @@ const Prompt = () => {
       })
       .then((data) => {
         setResult(data);
- 
+
         setTimeout(() => {
-            setLoading(false);
-        }, 1500)
+          setLoading(false);
+        }, 1500);
       })
       .catch((error) => {
         console.error(error);
@@ -59,7 +57,7 @@ const Prompt = () => {
 
   return (
     <>
-      <div className="mx-auto mt-20 h-[400px] border items w-full max-w-screen-md rounded-lg p-6 shadow-lg shadow-purple-500/40">
+      <div className="items mx-auto mt-20 h-[400px] w-full max-w-screen-md rounded-lg border p-6 shadow-lg shadow-purple-500/40">
         <Tabs
           data={[
             {

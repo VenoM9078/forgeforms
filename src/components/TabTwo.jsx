@@ -33,7 +33,7 @@ const TabTwo = () => {
 
     //request to handle route
     axios
-      .post("http://127.0.0.1:8000/api/v1/file/handle", {
+      .post("http://localhost:8000/api/v1/file/handle", {
         fileName: fileName,
         filePath: filePath,
       })
@@ -68,7 +68,7 @@ const TabTwo = () => {
             allowMultiple={false}
             maxFileSize={maxFileSize}
             data-max-files={1}
-            server="http://127.0.0.1:8000/api/v1/file/upload"
+            server="http://localhost:8000/api/v1/file/upload"
             labelIdle='Drag & Drop your SQL schema file or <span class="filepond--label-action">Browse</span>'
             onupdatefiles={handleFileUpload}
             fileValidateTypeDetectType={(source, type) =>
@@ -113,7 +113,9 @@ const TabTwo = () => {
                 ></path>
               </svg>
             ) : (
-              <><FiUpload className="mr-2 h-5 w-5" /> </> 
+              <>
+                <FiUpload className="mr-2 h-5 w-5" />{" "}
+              </>
             )}
             {isUploaded ? (
               <FiCheck className="mr-2 h-5 w-5" />
