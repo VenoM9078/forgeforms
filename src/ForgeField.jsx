@@ -1,13 +1,9 @@
 /* eslint-disable react/prop-types */
+import React from "react";
 
 const validateEmail = (value) => {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return pattern.test(value) ? null : "Invalid email address";
-};
-
-const validatePhoneNumber = (value) => {
-  const pattern = /^[0-9]{10}$/;
-  return pattern.test(value) ? null : "Invalid phone number";
 };
 
 const ForgeField = ({
@@ -16,21 +12,16 @@ const ForgeField = ({
   handleFieldChange,
   handleErrors,
   errors,
+  customStyle,
+  className,
 }) => {
   const handleChange = (e) => {
     const value = e.target.value;
     handleFieldChange(name, value);
 
     let error = null;
-    switch (type) {
-      case "email":
-        error = validateEmail(value);
-        break;
-      case "phone":
-        error = validatePhoneNumber(value);
-        break;
-      default:
-        break;
+    if (type === "email") {
+      error = validateEmail(value);
     }
     handleErrors(name, error);
   };
@@ -39,7 +30,6 @@ const ForgeField = ({
 
   switch (type) {
     case "email":
-    case "phone":
     case "text":
       inputElement = <input type="text" name={name} onChange={handleChange} />;
       break;
@@ -52,7 +42,7 @@ const ForgeField = ({
   }
 
   return (
-    <div>
+    <div style={customStyle} className={className}>
       {inputElement}
       {errors && errors[name] && <div className="error">{errors[name]}</div>}
     </div>

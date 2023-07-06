@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import axios from "axios";
 
-const ForgeForms = ({ apiKey, children }) => {
+const ForgeForms = ({ apiKey, children, customStyle, className }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -17,9 +16,6 @@ const ForgeForms = ({ apiKey, children }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Here you might want to perform some final validation before sending
-    // the data, and possibly update the errors object accordingly.
-
     try {
       const response = await axios.post(
         "https://your-server.com/api",
@@ -31,10 +27,8 @@ const ForgeForms = ({ apiKey, children }) => {
         }
       );
 
-      // Handle response here
       console.log(response);
     } catch (error) {
-      // Handle error here
       console.error("Error submitting form:", error);
     }
   };
@@ -47,7 +41,11 @@ const ForgeForms = ({ apiKey, children }) => {
     });
   });
 
-  return <form onSubmit={handleSubmit}>{formChildren}</form>;
+  return (
+    <form onSubmit={handleSubmit} style={customStyle} className={className}>
+      {formChildren}
+    </form>
+  );
 };
 
 export default ForgeForms;
