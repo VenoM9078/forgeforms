@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ForgeField from "./ForgeField";
 import ForgeForms from "./ForgeForms";
+import ForgeOption from "./ForgeOption";
+import ForgeSelect from "./ForgeSelect";
 import ForgeSubmit from "./ForgeSubmit";
 
 function App() {
@@ -14,15 +16,9 @@ function App() {
   return (
     <>
       <ForgeForms apiKey="whatever">
-        <ForgeField
-          // customStyle={{ width: "100%", border: "none", height: "20px" }}
-          type="gay"
-          name="email"
-          onChange={handleEmail}
-          value={email}
-          label={`Enter Email Address`}
-          placeholder={`Enter Email Address`}
-        />
+        <ForgeSelect label="Fuck Tigers" placeholder="Whatever">
+          <ForgeOption value="Tiger">Tiger</ForgeOption>
+        </ForgeSelect>
         <ForgeField
           // customStyle={{ width: "100%", border: "none", height: "20px" }}
           type="email"

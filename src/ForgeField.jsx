@@ -23,31 +23,13 @@ const ForgeField = ({
 }) => {
   const handleChange = (e) => {
     const value = e.target.value;
-    handleFieldChange(name, value);
+    handleFieldChange(name, value, onChange); // Pass the user provided onChange handler too
 
     let error = null;
     if (type === "email") {
       error = validateEmail(value);
     }
     handleErrors(name, error);
-
-    // If user provided an onChange handler, call it
-    if (onChange) {
-      onChange(e);
-    }
-  };
-
-  ForgeField.propTypes = {
-    type: PropTypes.oneOf(["email", "text", "textarea", "number"]).isRequired, // 'type' is required
-    name: PropTypes.string,
-    handleFieldChange: PropTypes.func,
-    handleErrors: PropTypes.func,
-    errors: PropTypes.object,
-    customStyle: PropTypes.object,
-    className: PropTypes.string,
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    onChange: PropTypes.func,
   };
 
   let inputElement = null;
@@ -106,6 +88,19 @@ const ForgeField = ({
       {errors && errors[name] && <div className="error">{errors[name]}</div>}
     </div>
   );
+};
+
+ForgeField.propTypes = {
+  type: PropTypes.oneOf(["email", "text", "textarea", "number"]).isRequired, // 'type' is required
+  name: PropTypes.string,
+  handleFieldChange: PropTypes.func,
+  handleErrors: PropTypes.func,
+  errors: PropTypes.object,
+  customStyle: PropTypes.object,
+  className: PropTypes.string,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default ForgeField;

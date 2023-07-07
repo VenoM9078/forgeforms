@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -5,8 +6,13 @@ const ForgeForms = ({ apiKey, children, customStyle, className }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
-  const handleFieldChange = (name, value) => {
+  const handleFieldChange = (name, value, userOnChange) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    // Call user provided onChange handler if it exists
+    if (userOnChange) {
+      userOnChange({ target: { name, value } });
+    }
   };
 
   const handleErrors = (name, error) => {
@@ -35,7 +41,8 @@ const ForgeForms = ({ apiKey, children, customStyle, className }) => {
 
   const formChildren = React.Children.map(children, (child) => {
     return React.cloneElement(child, {
-      handleFieldChange,
+      handleFieldChange: (name, value) =>
+        handleFieldChange(name, value, child.props.onChange),
       handleErrors,
       errors,
     });
