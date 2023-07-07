@@ -4,6 +4,11 @@ import React from "react";
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    modules: {
+      localsConvention: "camelCase",
+    },
+  },
   build: {
     lib: {
       entry: "src/index.js",

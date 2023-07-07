@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import "./index.css";
 
 const ForgeSubmit = ({ customStyle, className, text = "Submit" }) => {
   return (
