@@ -19,11 +19,11 @@ const ForgeField = ({
   className,
   label,
   placeholder,
-  onChange, // added onChange prop
+  onChange,
 }) => {
   const handleChange = (e) => {
     const value = e.target.value;
-    handleFieldChange(name, value, onChange); // Pass the user provided onChange handler too
+    handleFieldChange(name, value, onChange);
 
     let error = null;
     if (type === "email") {
@@ -37,6 +37,7 @@ const ForgeField = ({
   switch (type) {
     case "email":
     case "text":
+    case "number":
       inputElement = (
         <input
           type={type}
@@ -44,6 +45,7 @@ const ForgeField = ({
           value={value}
           placeholder={placeholder}
           onChange={handleChange}
+          className={`ff-field-input ${className || ""}`}
         />
       );
       break;
@@ -54,17 +56,7 @@ const ForgeField = ({
           value={value}
           placeholder={placeholder}
           onChange={handleChange}
-        />
-      );
-      break;
-    case "number":
-      inputElement = (
-        <input
-          type="number"
-          name={name}
-          value={value}
-          placeholder={placeholder}
-          onChange={handleChange}
+          className={`ff-field-textarea ${className || ""}`}
         />
       );
       break;
@@ -76,22 +68,27 @@ const ForgeField = ({
           value={value}
           placeholder={placeholder}
           onChange={handleChange}
+          className={`ff-field-input ${className || ""}`}
         />
       );
       break;
   }
 
   return (
-    <div style={customStyle} className={className}>
-      {label && <label htmlFor={name}>{label}</label>}
+    <div style={customStyle} className={`ff-field-div ${className || ""}`}>
+      {label && (
+        <label htmlFor={name} className={`ff-field-label`}>
+          {label}
+        </label>
+      )}
       {inputElement}
-      {errors && errors[name] && <div className="error">{errors[name]}</div>}
+      {errors && errors[name] && <div>{errors[name]}</div>}
     </div>
   );
 };
 
 ForgeField.propTypes = {
-  type: PropTypes.oneOf(["email", "text", "textarea", "number"]).isRequired, // 'type' is required
+  type: PropTypes.oneOf(["email", "text", "textarea", "number"]).isRequired,
   name: PropTypes.string,
   handleFieldChange: PropTypes.func,
   handleErrors: PropTypes.func,

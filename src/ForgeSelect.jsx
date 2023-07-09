@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styles from "./index.css";
 
 const ForgeSelect = ({
   name,
@@ -19,12 +20,16 @@ const ForgeSelect = ({
 
   return (
     <div>
-      {label && <label htmlFor={name}>{label}</label>}
+      {label && (
+        <label htmlFor={name} className={`ff-field-label`}>
+          {label}
+        </label>
+      )}
       <select
         name={name}
         onChange={onChange}
         style={customStyle}
-        className={`${className || ""}`}
+        className={`ff-field-select ${className || ""}`}
       >
         {placeholder && (
           <option value="" disabled selected>

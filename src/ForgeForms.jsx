@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import axios from "axios";
+import "./index.css";
 
 const ForgeForms = ({ apiKey, children, customStyle, className }) => {
   const [formData, setFormData] = useState({});
@@ -49,7 +49,11 @@ const ForgeForms = ({ apiKey, children, customStyle, className }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit} style={customStyle} className={className}>
+    <form
+      onSubmit={handleSubmit}
+      style={customStyle}
+      className={`ff-field-form ${className}`}
+    >
       {formChildren}
     </form>
   );

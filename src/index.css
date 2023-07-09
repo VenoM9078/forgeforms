@@ -31,12 +31,12 @@
 }
 
 /* You can now use the Inter font in your CSS by referring to its family name */
-form {
+.ff-field-form {
   font-family: "Inter", sans-serif;
 }
 
 /* Default Label styling */
-label {
+.ff-field-label {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
@@ -46,16 +46,16 @@ label {
 
 /* Default Input container styling */
 /* Assuming the parent div of input fields and textareas as input container. */
-div {
+.ff-field-div {
   margin-top: 0.625rem;
 }
 
 /* Default Input field styling */
-input[type="text"],
-input[type="email"],
-input[type="number"],
-input[type="password"],
-textarea {
+.ff-field-input[type="text"],
+.ff-field-input[type="email"],
+.ff-field-input[type="number"],
+.ff-field-input[type="password"],
+.ff-field-textarea {
   display: block;
   width: 100%;
   padding: 0.5rem 0.875rem;
@@ -72,34 +72,34 @@ textarea {
 }
 
 /* Default Placeholder text styling */
-input[type="text"]::placeholder,
-input[type="email"]::placeholder,
-input[type="number"]::placeholder,
-input[type="password"]::placeholder,
-textarea::placeholder {
+.ff-field-input[type="text"]::placeholder,
+.ff-field-input[type="email"]::placeholder,
+.ff-field-input[type="number"]::placeholder,
+.ff-field-input[type="password"]::placeholder,
+.ff-field-textarea::placeholder {
   color: #a0aec0;
   font-family: "Inter", sans-serif;
 }
 
 /* Default Input focus styling */
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="number"]:focus,
-input[type="password"]:focus,
-textarea:focus {
+.ff-field-input[type="text"]:focus,
+.ff-field-input[type="email"]:focus,
+.ff-field-input[type="number"]:focus,
+.ff-field-input[type="password"]:focus,
+.ff-field-textarea:focus {
   outline: none;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.06),
     0 0 0 2px rgba(79, 70, 229, 0.8);
 }
 
 /* Default Textarea specific styling */
-textarea {
+.ff-field-textarea {
   resize: vertical;
   min-height: 64px; /* Roughly equal to 4 rows */
 }
 
 /* Default Button styling */
-button {
+.ff-field-button {
   color: #ffffff;
   background-color: rgb(79, 70, 229);
   font-weight: 500;
@@ -119,25 +119,25 @@ button {
 }
 
 /* Button Hover styling */
-button:hover {
+.ff-field-button:hover {
   background-image: linear-gradient(to bottom right, #4299e1, #3182ce, #2c5282);
 }
 
 /* Button Focus styling */
-button:focus {
+.ff-field-button:focus {
   outline: none;
   box-shadow: 0 0 0 0.25rem rgba(99, 179, 237, 0.5);
 }
 
 /* Dark mode Button Focus styling - optional, only needed if you're implementing dark mode */
 @media (prefers-color-scheme: dark) {
-  button:focus {
+  .ff-field-button:focus {
     box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.5);
   }
 }
 
 /* Styles for label */
-label {
+.ff-field-label {
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
@@ -147,7 +147,7 @@ label {
 }
 
 /* Styles for select */
-select {
+.ff-field-select {
   background-color: #f8fafc;
   border: 1px solid #d2d6dc;
   color: #4a5568;
@@ -158,7 +158,7 @@ select {
   font-family: "Inter", sans-serif;
 }
 
-select:focus {
+.ff-field-select:focus {
   outline: none;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.06),
     0 0 0 2px rgba(79, 70, 229, 0.8);

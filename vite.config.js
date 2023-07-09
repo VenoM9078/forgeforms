@@ -1,14 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import React from "react";
+import * as packageJson from "./package.json";
 
 export default defineConfig({
   plugins: [react()],
-  css: {
-    modules: {
-      localsConvention: "camelCase",
-    },
-  },
   build: {
     lib: {
       entry: "src/index.js",
@@ -16,7 +11,7 @@ export default defineConfig({
       fileName: "forgeforms",
     },
     rollupOptions: {
-      external: ["react", "react-dom"], // Specify external dependencies
+      external: [...Object.keys(packageJson.peerDependencies)], // Specify external dependencies
       output: {
         globals: {
           react: "React", // Map react to global variable React
