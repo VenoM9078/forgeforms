@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ForgeCheckbox from "./ForgeCheckbox";
 import ForgeField from "./ForgeField";
 import ForgeForms from "./ForgeForms";
 import ForgeOption from "./ForgeOption";
@@ -45,6 +46,11 @@ function App() {
         <ForgeField
           // customStyle={{ width: "100%", border: "none", height: "20px" }}
           type="textarea"
+          name="message"
+          label={`Message`}
+          placeholder={`Enter Message`}
+        />
+        <ForgeCheckbox
           name="message"
           label={`Message`}
           placeholder={`Enter Message`}

@@ -163,3 +163,45 @@
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.06),
     0 0 0 2px rgba(79, 70, 229, 0.8);
 }
+.ff-checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  /* appearance: none; */
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid currentColor;
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+}
+
+input[type="checkbox"]:checked {
+  /* background-color: #3b82f6; */
+}
+
+.ff-field-label {
+  cursor: pointer;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #1f2937; /* text-gray-900 */
+  margin-left: 10px;
+}
+
+.ff-field-label a {
+  color: #3b82f6; /* text-blue-600 */
+  text-decoration: none;
+}
+
+.ff-field-label a:hover {
+  text-decoration: underline;
+}
+
+.form-control + .form-control {
+  margin-top: 1em;
+}

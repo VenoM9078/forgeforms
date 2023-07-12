@@ -76,7 +76,7 @@ const ForgeField = ({
 
   return (
     <div style={customStyle} className={`ff-field-div ${className || ""}`}>
-      {label && (
+      {label && type != "checkbox" && (
         <label htmlFor={name} className={`ff-field-label`}>
           {label}
         </label>
