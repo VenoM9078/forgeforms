@@ -1,7 +1,7 @@
 {
   "name": "forgeforms",
   "private": false,
-  "version": "0.0.25",
+  "version": "0.0.30",
   "type": "module",
   "main": "dist/forgeforms.js",
   "module": "dist/forgeforms.js",

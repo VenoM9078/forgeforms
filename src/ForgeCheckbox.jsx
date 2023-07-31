@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./index.css";
 
 const ForgeCheckbox = ({
+  id,
   label,
   name,
   value,
@@ -15,13 +16,13 @@ const ForgeCheckbox = ({
     <div className="ff-checkbox-container">
       <input
         type="checkbox"
-        id={name}
+        id={id}
         name={name}
         checked={value}
         onChange={handleChange}
         className={`ff-field-checkbox ${className || ""}`}
       />
-      <label htmlFor={name} className="ff-field-label">
+      <label htmlFor={id} className="ff-field-label">
         {label}
       </label>
       {errors && errors[name] && <div>{errors[name]}</div>}

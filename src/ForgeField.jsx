@@ -9,6 +9,7 @@ const validateEmail = (value) => {
 };
 
 const ForgeField = ({
+  id,
   type,
   name,
   value,
@@ -40,6 +41,7 @@ const ForgeField = ({
     case "number":
       inputElement = (
         <input
+          id={id}
           type={type}
           name={name}
           value={value}
@@ -52,6 +54,7 @@ const ForgeField = ({
     case "textarea":
       inputElement = (
         <textarea
+          id={id}
           name={name}
           value={value}
           placeholder={placeholder}
@@ -63,6 +66,7 @@ const ForgeField = ({
     default:
       inputElement = (
         <input
+          id={id}
           type="text"
           name={name}
           value={value}
@@ -77,7 +81,7 @@ const ForgeField = ({
   return (
     <div style={customStyle} className={`ff-field-div ${className || ""}`}>
       {label && type != "checkbox" && (
-        <label htmlFor={name} className={`ff-field-label`}>
+        <label htmlFor={id} className={`ff-field-label`}>
           {label}
         </label>
       )}
