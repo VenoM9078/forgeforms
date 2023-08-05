@@ -50,6 +50,11 @@
   margin-top: 0.625rem;
 }
 
+.form-title{
+  align-items: center;
+  justify-content: center;
+}
+
 /* Default Input field styling */
 .ff-field-input[type="text"],
 .ff-field-input[type="email"],
@@ -182,7 +187,7 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked {
-  /* background-color: #3b82f6; */
+  background-color: #3b82f6;
 }
 
 .ff-field-label {

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./index.css";
+import "./index.css";
 
 const ForgeSelect = ({
   name,
@@ -26,30 +26,35 @@ const ForgeSelect = ({
         </label>
       )}
       <select
-        name={name}
-        onChange={onChange}
-        style={customStyle}
-        className={`ff-field-select ${className || ""}`}
-      >
-        {placeholder && (
-          <option value="" disabled selected>
-            {placeholder}
-          </option>
-        )}
-        {validatedChildren}
-      </select>
+  name={name}
+  onChange={onChange}
+  style={customStyle}
+  className={`ff-field-select ${className || ""}`}
+  defaultValue={value} // Set the default value
+>
+  {placeholder && (
+    <option value="" disabled>
+      {placeholder}
+    </option>
+  )}
+  {validatedChildren}
+</select>
     </div>
   );
 };
 
 ForgeSelect.propTypes = {
-  name: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  onChange: PropTypes.func,
-  customStyle: PropTypes.object,
-  className: PropTypes.string,
-  label: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  onChange: PropTypes.func,
+  value: PropTypes.string,
+  children: PropTypes.arrayOf( // Replace 'options' with 'children'
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default ForgeSelect;
