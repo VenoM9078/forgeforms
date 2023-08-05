@@ -4,6 +4,9 @@ import ForgeField from "./ForgeField";
 import ForgeCheckbox from "./ForgeCheckbox";
 import ForgeSelect from "./ForgeSelect";
 import ForgeSubmit from "./ForgeSubmit";
+import ForgeOption from "./ForgeOption";
+
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const ForgeForms = ({ apiKey }) => {
   const [formFields, setFormFields] = useState([]);
@@ -12,6 +15,7 @@ const ForgeForms = ({ apiKey }) => {
   const [formValues, setFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   useEffect(() => {
     axios.defaults.baseURL = "http://localhost:5030";
@@ -43,6 +47,28 @@ const ForgeForms = ({ apiKey }) => {
       });
   }, [apiKey]);
 
+  const handleVerificationSuccess = async (token) => {
+    setCaptchaToken(token);
+    try {
+      const response = await axios.post(
+        "http://localhost:5030/api/verifyHCaptcha",
+        {
+          token: token,
+        }
+      );
+
+      // Checking the message from server for successful verification
+      if (response.data.message === "Captcha verification successful") {
+        console.log("hCaptcha verified successfully");
+      } else {
+        console.error("hCaptcha verification failed");
+        setCaptchaToken(null); // Clear the token if verification failed
+      }
+    } catch (error) {
+      console.error("There was an error verifying the hCaptcha token:", error);
+    }
+  };
+
   const handleFieldChange = (name, value) => {
     setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
@@ -50,7 +76,11 @@ const ForgeForms = ({ apiKey }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 1. Validation
+    if (!captchaToken) {
+      console.error("Please verify the captcha before submitting the form.");
+      return;
+    }
+
     const errors = {};
     formFields.forEach((field) => {
       if (!formValues[field.id] && formValues[field.id] !== false) {
@@ -175,6 +205,11 @@ const ForgeForms = ({ apiKey }) => {
               return null;
           }
         })}
+
+        <HCaptcha
+          sitekey="26577743-5ee6-4ead-9cba-37593deeb635"
+          onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
+        />
         <ForgeSubmit text="Submit" />
         <div
           style={{
@@ -185,7 +220,14 @@ const ForgeForms = ({ apiKey }) => {
           }}
         >
           Secured by{" "}
-          <a href="#" style={{ textDecoration: "none", color: "inherit", fontWeight: "bold" }}>
+          <a
+            href="#"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontWeight: "bold",
+            }}
+          >
             ForgeForms
           </a>
         </div>
