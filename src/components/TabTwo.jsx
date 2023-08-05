@@ -6,10 +6,16 @@ import "../custom-filepond.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FiUpload, FiCheck } from "react-icons/fi";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 
 registerPlugin(FilePondPluginFileValidateType);
 
 const TabTwo = () => {
+
+  const { user } = useUser();
+  const [login, setLogin] = useState(user ? true : false);
+
   const navigate = useNavigate();
   const [schemaFile, setSchemaFile] = useState(null);
   const [fileName, setFileName] = useState("");
@@ -31,11 +37,18 @@ const TabTwo = () => {
     //handle loading page
     setIsUploading(!isUploading);
 
+    let user_id = "";
+
+    if (user) {
+      user_id = user.id;
+    }
+
     //request to handle route
     axios
-      .post("http://localhost:8000/api/v1/file/handle", {
+      .post("http://localhost:8000/api/v1/queryformer/file/handle", {
         fileName: fileName,
         filePath: filePath,
+        userId: user_id,
       })
       .then((data) => {
         setIsUploading(!isUploading);
@@ -68,7 +81,7 @@ const TabTwo = () => {
             allowMultiple={false}
             maxFileSize={maxFileSize}
             data-max-files={1}
-            server="http://localhost:8000/api/v1/file/upload"
+            server="http://localhost:8000/api/v1/queryformer/file/upload"
             labelIdle='Drag & Drop your SQL schema file or <span class="filepond--label-action">Browse</span>'
             onupdatefiles={handleFileUpload}
             fileValidateTypeDetectType={(source, type) =>
@@ -90,39 +103,86 @@ const TabTwo = () => {
               }
             }}
           />
-          <button
-            className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
-            type="submit"
-            onClick={handleUpload}
-            disabled={isUploading || isUploaded}
-          >
-            {isUploading ? (
-              <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
-                ></path>
-              </svg>
-            ) : (
-              <>
-                <FiUpload className="mr-2 h-5 w-5" />{" "}
-              </>
-            )}
-            {isUploaded ? (
-              <FiCheck className="mr-2 h-5 w-5" />
-            ) : (
-              <span>Upload</span>
-            )}
-          </button>
+
+          <SignedIn>
+            <button
+              className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
+              type="submit"
+              onClick={handleUpload}
+              disabled={isUploading || isUploaded}
+            >
+              {isUploading ? (
+                <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
+                  ></path>
+                </svg>
+              ) : (
+                <>
+                  <FiUpload className="mr-2 h-5 w-5" />{" "}
+                </>
+              )}
+              {isUploaded ? (
+                <FiCheck className="mr-2 h-5 w-5" />
+              ) : (
+                <span>Upload</span>
+              )}
+            </button>
+          </SignedIn>
+          <SignedOut>
+            {" "}
+            <SignInButton
+              afterSignInUrl="/"
+              afterSignUpUrl="/"
+              mode="modal"
+            >
+              {login ? <button
+                className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
+                type="submit"
+                onClick={handleUpload}
+                disabled={isUploading || isUploaded}
+              >
+                {isUploading ? (
+                  <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <>
+                    <FiUpload className="mr-2 h-5 w-5" />{" "}
+                  </>
+                )}
+                {isUploaded ? (
+                  <FiCheck className="mr-2 h-5 w-5" />
+                ) : (
+                  <span>Upload</span>
+                )}
+              </button> : <a
+                className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
+              >Sign In</a>}
+            </SignInButton>
+          </SignedOut>
         </form>
       </div>
     </>

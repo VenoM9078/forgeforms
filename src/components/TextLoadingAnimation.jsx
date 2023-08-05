@@ -20,7 +20,7 @@ const TextLoadingAnimatiom = ({ query }) => {
     document.execCommand("copy");
     document.body.removeChild(el);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 500);
     window.alert('Text copied to clipboard!');
   };
 

@@ -29,7 +29,7 @@ const Prompt = () => {
 
     const requestBody = JSON.stringify({ query: paramPrompt });
 
-    fetch("http://localhost:8000/api/v1/query/sql-query", {
+    fetch("http://localhost:8000/api/v1/queryformer/sql-query", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
