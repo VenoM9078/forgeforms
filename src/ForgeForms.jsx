@@ -206,10 +206,12 @@ const ForgeForms = ({ apiKey }) => {
           }
         })}
 
-        <HCaptcha
-          sitekey="26577743-5ee6-4ead-9cba-37593deeb635"
-          onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
-        />
+        <div style={{marginTop: "0.5rem", marginBottom: "0.5rem"}}>
+          <HCaptcha
+            sitekey="26577743-5ee6-4ead-9cba-37593deeb635"
+            onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
+          />
+        </div>
         <ForgeSubmit text="Submit" />
         <div
           style={{
