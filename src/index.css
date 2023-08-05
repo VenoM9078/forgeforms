@@ -50,9 +50,10 @@
   margin-top: 0.625rem;
 }
 
-.form-title{
+.form-title {
   align-items: center;
   justify-content: center;
+  font-family: "Inter";
 }
 
 /* Default Input field styling */
@@ -63,8 +64,10 @@
 .ff-field-textarea {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.875rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
   font-size: 1rem;
+  padding-left: 0.5rem;
   line-height: 1.5;
   color: #2d3748;
   background-color: #fff;
@@ -209,4 +212,16 @@ input[type="checkbox"]:checked {
 
 .form-control + .form-control {
   margin-top: 1em;
+}
+
+.custom-class {
+  width: 100%;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.13),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
 }

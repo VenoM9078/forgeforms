@@ -7,6 +7,7 @@ import ForgeSubmit from "./ForgeSubmit";
 
 const ForgeForms = ({ apiKey }) => {
   const [formFields, setFormFields] = useState([]);
+  const [originalResponse, setOriginalResponse] = useState([]); // [
   const [formTitle, setFormTitle] = useState("");
   const [formValues, setFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -18,6 +19,7 @@ const ForgeForms = ({ apiKey }) => {
       .get(`/getForm/${apiKey}`)
       .then((response) => {
         const formData = JSON.parse(response.data.formData);
+        setOriginalResponse(response.data);
         const trueFormFields = formData.filter(
           (fieldData) => fieldData.order && fieldData.value
         );
@@ -45,17 +47,54 @@ const ForgeForms = ({ apiKey }) => {
     setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with values:", formValues);
+
+    // 1. Validation
+    const errors = {};
+    formFields.forEach((field) => {
+      if (!formValues[field.id] && formValues[field.id] !== false) {
+        errors[field.id] = `${field.label} is required.`;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    // Prepare the response to be sent
+    const responseData = {
+      formId: originalResponse.id,
+      response: Object.entries(formValues), // Convert form values to an array of [key, value] pairs
+    };
+
+    // 2. Sending Data
+    try {
+      const response = await axios.post(
+        "http://localhost:5030/api/submitForm",
+        responseData
+      );
+
+      if (response.status === 200) {
+        console.log("Form submitted successfully:", response.data);
+        setFormValues({});
+      } else {
+        console.error("Error submitting the form:", response.data);
+      }
+    } catch (error) {
+      // 3. Error Handling
+      console.error("There was an error submitting the form:", error);
+    }
   };
 
   if (!dataLoaded) {
     return <p>Loading...</p>;
   }
+  console.log("Form submitted with values:", originalResponse);
 
   return (
-    <div>
+    <div className="custom-class">
       <h2 className="form-title">{formTitle}</h2>
       <form onSubmit={handleSubmit}>
         {formFields.map((field, index) => {
@@ -65,61 +104,71 @@ const ForgeForms = ({ apiKey }) => {
             case "email":
             case "number":
               return (
-                <ForgeField
-                  key={index}
-                  id={id}
-                  type={type}
-                  name={id}
-                  value={formValues[id]}
-                  handleFieldChange={handleFieldChange}
-                  errors={formErrors}
-                  label={label}
-                />
+                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                  <ForgeField
+                    key={index}
+                    id={id}
+                    type={type}
+                    name={id}
+                    value={formValues[id]}
+                    handleFieldChange={handleFieldChange}
+                    errors={formErrors}
+                    label={label}
+                  />
+                </div>
               );
 
             case "textarea":
               return (
-                <ForgeField
-                  key={index}
-                  id={id}
-                  type={type}
-                  name={id}
-                  value={formValues[id] || ""}
-                  handleFieldChange={handleFieldChange}
-                  errors={formErrors}
-                  label={label}
-                />
+                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                  <ForgeField
+                    key={index}
+                    id={id}
+                    type={type}
+                    name={id}
+                    value={formValues[id] || ""}
+                    handleFieldChange={handleFieldChange}
+                    errors={formErrors}
+                    label={label}
+                  />
+                </div>
               );
 
             case "select":
               return (
-                <ForgeSelect
-                  key={index}
-                  name={id}
-                  onChange={(e) => handleFieldChange(id, e.target.value)}
-                  value={formValues[id] || ""}
-                  label={label}
-                  placeholder="Select an option"
-                >
-                  {options.map((option, optionIndex) => (
-                    <ForgeOption key={optionIndex} value={option.value}>
-                      {option.label}
-                    </ForgeOption>
-                  ))}
-                </ForgeSelect>
+                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                  <ForgeSelect
+                    key={index}
+                    name={id}
+                    onChange={(e) => handleFieldChange(id, e.target.value)}
+                    value={formValues[id] || ""}
+                    label={label}
+                    placeholder="Select an option"
+                  >
+                    {options.map((option, optionIndex) => (
+                      <ForgeOption key={optionIndex} value={option.value}>
+                        {option.label}
+                      </ForgeOption>
+                    ))}
+                  </ForgeSelect>
+                </div>
               );
 
             case "checkbox":
               return (
-                <ForgeCheckbox
-                  key={index}
-                  id={id}
-                  label={label}
-                  name={id}
-                  value={formValues[id] || false}
-                  handleChange={(e) => handleFieldChange(id, e.target.checked)}
-                  errors={formErrors}
-                />
+                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                  <ForgeCheckbox
+                    key={index}
+                    id={id}
+                    label={label}
+                    name={id}
+                    value={formValues[id] || false}
+                    handleChange={(e) =>
+                      handleFieldChange(id, e.target.checked)
+                    }
+                    errors={formErrors}
+                  />
+                </div>
               );
 
             default:
@@ -127,6 +176,19 @@ const ForgeForms = ({ apiKey }) => {
           }
         })}
         <ForgeSubmit text="Submit" />
+        <div
+          style={{
+            textAlign: "right",
+            color: "lightgray",
+            fontFamily: "Inter",
+            marginTop: "10px",
+          }}
+        >
+          Secured by{" "}
+          <a href="#" style={{ textDecoration: "none", color: "inherit", fontWeight: "bold" }}>
+            ForgeForms
+          </a>
+        </div>
       </form>
     </div>
   );
