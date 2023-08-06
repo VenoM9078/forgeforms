@@ -10,7 +10,7 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const ForgeForms = ({ apiKey }) => {
   const [formFields, setFormFields] = useState([]);
-  const [originalResponse, setOriginalResponse] = useState([]); // [
+  const [originalResponse, setOriginalResponse] = useState([]); 
   const [formTitle, setFormTitle] = useState("");
   const [formValues, setFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
