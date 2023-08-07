@@ -11,6 +11,7 @@ const ForgeCheckbox = ({
   handleChange,
   className,
   errors,
+  url,
 }) => {
   return (
     <div className="ff-checkbox-container">
@@ -23,7 +24,7 @@ const ForgeCheckbox = ({
         className={`ff-field-checkbox ${className || ""}`}
       />
       <label htmlFor={id} className="ff-field-label">
-        {label}
+        I agree to the <a href={url}>Terms & Conditions</a>
       </label>
       {errors && errors[name] && <div>{errors[name]}</div>}
     </div>
@@ -37,6 +38,7 @@ ForgeCheckbox.propTypes = {
   handleChange: PropTypes.func,
   className: PropTypes.string,
   errors: PropTypes.object,
+  url: PropTypes.string,
 };
 
 export default ForgeCheckbox;

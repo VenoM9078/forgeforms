@@ -10,7 +10,7 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const ForgeForms = ({ apiKey }) => {
   const [formFields, setFormFields] = useState([]);
-  const [originalResponse, setOriginalResponse] = useState([]); 
+  const [originalResponse, setOriginalResponse] = useState([]);
   const [formTitle, setFormTitle] = useState("");
   const [formValues, setFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -24,11 +24,12 @@ const ForgeForms = ({ apiKey }) => {
       .then((response) => {
         const formData = JSON.parse(response.data.formData);
         setOriginalResponse(response.data);
-        const trueFormFields = formData.filter(
-          (fieldData) => fieldData.order && fieldData.value
-        );
 
-        trueFormFields.sort((a, b) => a.order - b.order);
+        // Include all fields that have the 'value' property, regardless of 'order'
+        const trueFormFields = formData.filter((fieldData) => fieldData.value);
+
+        // If the 'order' property exists, sort based on it; otherwise, preserve the original order
+        trueFormFields.sort((a, b) => (a.order || 0) - (b.order || 0));
         setFormFields(trueFormFields);
 
         setFormTitle(response.data.formTitle || "");
@@ -36,6 +37,8 @@ const ForgeForms = ({ apiKey }) => {
           acc[field.id] = "";
           return acc;
         }, {});
+
+        console.log(formData);
 
         setFormValues(initialValues);
         setFormErrors({});
@@ -122,91 +125,114 @@ const ForgeForms = ({ apiKey }) => {
     return <p>Loading...</p>;
   }
   console.log("Form submitted with values:", originalResponse);
-
+  console.log(formFields);
   return (
     <div className="custom-class">
       <h2 className="form-title">{formTitle}</h2>
       <form onSubmit={handleSubmit}>
-        {formFields.map((field, index) => {
-          const { type, id, label, options } = field;
-          switch (type) {
-            case "text":
-            case "email":
-            case "number":
-              return (
-                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                  <ForgeField
-                    key={index}
-                    id={id}
-                    type={type}
-                    name={id}
-                    value={formValues[id]}
-                    handleFieldChange={handleFieldChange}
-                    errors={formErrors}
-                    label={label}
-                  />
-                </div>
-              );
+        {formFields
+          .filter((field) => field.id !== "terms&conditions")
+          .map((field, index) => {
+            const { type, id, label, options } = field;
+            switch (type) {
+              case "text":
+              case "email":
+              case "number":
+                return (
+                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                    <ForgeField
+                      key={index}
+                      id={id}
+                      type={type}
+                      name={id}
+                      value={formValues[id]}
+                      handleFieldChange={handleFieldChange}
+                      errors={formErrors}
+                      label={label}
+                    />
+                  </div>
+                );
 
-            case "textarea":
-              return (
-                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                  <ForgeField
-                    key={index}
-                    id={id}
-                    type={type}
-                    name={id}
-                    value={formValues[id] || ""}
-                    handleFieldChange={handleFieldChange}
-                    errors={formErrors}
-                    label={label}
-                  />
-                </div>
-              );
+              case "textarea":
+                return (
+                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                    <ForgeField
+                      key={index}
+                      id={id}
+                      type={type}
+                      name={id}
+                      value={formValues[id] || ""}
+                      handleFieldChange={handleFieldChange}
+                      errors={formErrors}
+                      label={label}
+                    />
+                  </div>
+                );
 
-            case "select":
-              return (
-                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                  <ForgeSelect
-                    key={index}
-                    name={id}
-                    onChange={(e) => handleFieldChange(id, e.target.value)}
-                    value={formValues[id] || ""}
-                    label={label}
-                    placeholder="Select an option"
-                  >
-                    {options.map((option, optionIndex) => (
-                      <ForgeOption key={optionIndex} value={option.value}>
-                        {option.label}
-                      </ForgeOption>
-                    ))}
-                  </ForgeSelect>
-                </div>
-              );
+              case "select":
+                return (
+                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                    <ForgeSelect
+                      key={index}
+                      name={id}
+                      onChange={(e) => handleFieldChange(id, e.target.value)}
+                      value={formValues[id] || ""}
+                      label={label}
+                      placeholder="Select an option"
+                    >
+                      {options.map((option, optionIndex) => (
+                        <ForgeOption key={optionIndex} value={option.value}>
+                          {option.label}
+                        </ForgeOption>
+                      ))}
+                    </ForgeSelect>
+                  </div>
+                );
 
-            case "checkbox":
-              return (
-                <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                  <ForgeCheckbox
-                    key={index}
-                    id={id}
-                    label={label}
-                    name={id}
-                    value={formValues[id] || false}
-                    handleChange={(e) =>
-                      handleFieldChange(id, e.target.checked)
-                    }
-                    errors={formErrors}
-                  />
-                </div>
-              );
+              case "checkbox":
+                return (
+                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                    <ForgeCheckbox
+                      key={index}
+                      id={id}
+                      label={label}
+                      name={id}
+                      value={formValues[id] || false}
+                      handleChange={(e) =>
+                        handleFieldChange(id, e.target.checked)
+                      }
+                      errors={formErrors}
+                    />
+                  </div>
+                );
 
-            default:
-              return null;
-          }
-        })}
-
-        <div style={{marginTop: "0.5rem", marginBottom: "0.5rem"}}>
+              default:
+                return null;
+            }
+          })}
+        {formFields
+          .filter((field) => field.id === "terms&conditions")
+          .map((field, index) => {
+            return (
+              <div
+                key={Math.random()}
+                style={{ marginTop: "1rem", marginBottom: "1rem" }}
+              >
+                <ForgeCheckbox
+                  key={index}
+                  id={field.id}
+                  label={field.label}
+                  name={field.id}
+                  value={formValues[field.id] || false}
+                  handleChange={(e) =>
+                    handleFieldChange(field.id, e.target.checked)
+                  }
+                  errors={formErrors}
+                />
+              </div>
+            );
+          })}
+        <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
           <HCaptcha
             sitekey="26577743-5ee6-4ead-9cba-37593deeb635"
             onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
