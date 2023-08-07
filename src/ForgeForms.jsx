@@ -86,7 +86,10 @@ const ForgeForms = ({ apiKey }) => {
 
     const errors = {};
     formFields.forEach((field) => {
-      if (!formValues[field.id] && formValues[field.id] !== false) {
+      if (field.id === "terms&conditions" && !formValues[field.id]) {
+        // Check if the terms&conditions is checked
+        errors[field.id] = `You must agree to the ${field.label}.`;
+      } else if (!formValues[field.id] && formValues[field.id] !== false) {
         errors[field.id] = `${field.label} is required.`;
       }
     });
