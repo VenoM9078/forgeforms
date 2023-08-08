@@ -5,7 +5,8 @@ import ForgeCheckbox from "./ForgeCheckbox";
 import ForgeSelect from "./ForgeSelect";
 import ForgeSubmit from "./ForgeSubmit";
 import ForgeOption from "./ForgeOption";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const ForgeForms = ({ apiKey }) => {
@@ -16,6 +17,8 @@ const ForgeForms = ({ apiKey }) => {
   const [formErrors, setFormErrors] = useState({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState([]);
 
   useEffect(() => {
     axios.defaults.baseURL = "http://localhost:5030";
@@ -79,25 +82,29 @@ const ForgeForms = ({ apiKey }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError(false);
+    const errors = []; // Initialize errors as an array
+
     if (!captchaToken) {
-      console.error("Please verify the captcha before submitting the form.");
-      return;
+      errors.push("Please verify the captcha before submitting the form."); // Add captcha error to the errors array
     }
 
-    const errors = {};
     formFields.forEach((field) => {
       if (field.id === "terms&conditions" && !formValues[field.id]) {
         // Check if the terms&conditions is checked
-        errors[field.id] = `You must agree to the ${field.label}.`;
+        errors.push(`You must agree to the ${field.label}.`); // Add error to the array
       } else if (!formValues[field.id] && formValues[field.id] !== false) {
-        errors[field.id] = `${field.label} is required.`;
+        errors.push(`${field.label} is required.`); // Add error to the array
       }
     });
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
+    if (errors.length > 0) {
+      setErrorMsg(errors);
+      setError(true);
       return;
     }
+
+    // Continue with the rest of the code...
 
     // Prepare the response to be sent
     const responseData = {
@@ -113,104 +120,147 @@ const ForgeForms = ({ apiKey }) => {
       );
 
       if (response.status === 200) {
-        console.log("Form submitted successfully:", response.data);
         setFormValues({});
+        setError(false);
+        setErrorMsg([]); // Set to an empty array
       } else {
-        console.error("Error submitting the form:", response.data);
+        setError(true);
+        setErrorMsg(["Error submitting the form"]); // Wrap the message inside an array
       }
     } catch (error) {
-      // 3. Error Handling
-      console.error("There was an error submitting the form:", error);
+      setError(true);
+      setErrorMsg([error.message || "There was an error submitting the form"]); // Wrap the message inside an array
     }
   };
 
-  if (!dataLoaded) {
-    return <p>Loading...</p>;
-  }
-  console.log("Form submitted with values:", originalResponse);
-  console.log(formFields);
   return (
     <div className="custom-class">
-      <h2 className="form-title">{formTitle}</h2>
+      {error && (
+        <div className="rounded-md bg-red-50 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 textRed-400"
+                viewBox="0 0 20 20"
+                fill="red"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                There were errors with your submission
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                <ul role="list" className="list-disc space-y-1 pl-5">
+                  {errorMsg.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <h2 className="form-title">
+        {dataLoaded ? formTitle : <Skeleton width={200} />}
+      </h2>
       <form onSubmit={handleSubmit}>
         {formFields
           .filter((field) => field.id !== "terms&conditions")
           .map((field, index) => {
             const { type, id, label, options } = field;
-            switch (type) {
-              case "text":
-              case "email":
-              case "number":
-                return (
-                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                    <ForgeField
-                      key={index}
-                      id={id}
-                      type={type}
-                      name={id}
-                      value={formValues[id]}
-                      handleFieldChange={handleFieldChange}
-                      errors={formErrors}
-                      label={label}
-                    />
-                  </div>
-                );
+            if (!dataLoaded) {
+              return (
+                <div
+                  key={Math.random()}
+                  style={{ marginTop: "1rem", marginBottom: "1rem" }}
+                >
+                  <Skeleton count={1} height={40} />
+                </div>
+              );
+            } else {
+              switch (type) {
+                case "text":
+                case "email":
+                case "number":
+                  return (
+                    <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                      <ForgeField
+                        key={index}
+                        id={id}
+                        type={type}
+                        name={id}
+                        value={formValues[id]}
+                        handleFieldChange={handleFieldChange}
+                        errors={formErrors}
+                        label={label}
+                      />
+                    </div>
+                  );
 
-              case "textarea":
-                return (
-                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                    <ForgeField
-                      key={index}
-                      id={id}
-                      type={type}
-                      name={id}
-                      value={formValues[id] || ""}
-                      handleFieldChange={handleFieldChange}
-                      errors={formErrors}
-                      label={label}
-                    />
-                  </div>
-                );
+                case "textarea":
+                  return (
+                    <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                      <ForgeField
+                        key={index}
+                        id={id}
+                        type={type}
+                        name={id}
+                        value={formValues[id] || ""}
+                        handleFieldChange={handleFieldChange}
+                        errors={formErrors}
+                        label={label}
+                      />
+                    </div>
+                  );
 
-              case "select":
-                return (
-                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                    <ForgeSelect
-                      key={index}
-                      name={id}
-                      onChange={(e) => handleFieldChange(id, e.target.value)}
-                      value={formValues[id] || ""}
-                      label={label}
-                      placeholder="Select an option"
-                    >
-                      {options.map((option, optionIndex) => (
-                        <ForgeOption key={optionIndex} value={option.value}>
-                          {option.label}
-                        </ForgeOption>
-                      ))}
-                    </ForgeSelect>
-                  </div>
-                );
+                case "select":
+                  return (
+                    <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                      <ForgeSelect
+                        key={index}
+                        name={id}
+                        onChange={(e) => handleFieldChange(id, e.target.value)}
+                        value={formValues[id] || ""}
+                        label={label}
+                        placeholder="Select an option"
+                      >
+                        {options.map((option, optionIndex) => (
+                          <ForgeOption key={optionIndex} value={option.value}>
+                            {option.label}
+                          </ForgeOption>
+                        ))}
+                      </ForgeSelect>
+                    </div>
+                  );
 
-              case "checkbox":
-                return (
-                  <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-                    <ForgeCheckbox
-                      key={index}
-                      id={id}
-                      label={label}
-                      name={id}
-                      value={formValues[id] || false}
-                      handleChange={(e) =>
-                        handleFieldChange(id, e.target.checked)
-                      }
-                      errors={formErrors}
-                    />
-                  </div>
-                );
+                case "checkbox":
+                  return (
+                    <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                      <ForgeCheckbox
+                        key={index}
+                        id={id}
+                        label={label}
+                        name={id}
+                        value={formValues[id] || false}
+                        handleChange={(e) =>
+                          handleFieldChange(id, e.target.checked)
+                        }
+                        errors={formErrors}
+                      />
+                    </div>
+                  );
 
-              default:
-                return null;
+                default:
+                  return null;
+              }
             }
           })}
         {formFields
@@ -241,7 +291,12 @@ const ForgeForms = ({ apiKey }) => {
             onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
           />
         </div>
-        <ForgeSubmit text="Submit" />
+        {dataLoaded ? (
+          <ForgeSubmit text="Submit" />
+        ) : (
+          <Skeleton width={100} height={40} />
+        )}
+
         <div
           style={{
             textAlign: "right",
@@ -250,7 +305,7 @@ const ForgeForms = ({ apiKey }) => {
             marginTop: "10px",
           }}
         >
-          Secured by{" "}
+          {dataLoaded ? "Secured by" : <Skeleton width={100} />}{" "}
           <a
             href="#"
             style={{
@@ -259,7 +314,7 @@ const ForgeForms = ({ apiKey }) => {
               fontWeight: "bold",
             }}
           >
-            ForgeForms
+            {dataLoaded ? "ForgeForms" : <Skeleton width={100} />}
           </a>
         </div>
       </form>

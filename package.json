@@ -19,7 +19,8 @@
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.8.1",
     "axios": "^1.4.0",
-    "prop-types": "^15.8.1"
+    "prop-types": "^15.8.1",
+    "react-loading-skeleton": "^3.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
@@ -35,6 +36,7 @@
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "prop-types": "^15.8.1",
+    "react-loading-skeleton": "^3.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
