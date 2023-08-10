@@ -21,7 +21,7 @@ const ForgeForms = ({ apiKey }) => {
   const [errorMsg, setErrorMsg] = useState([]);
 
   useEffect(() => {
-    axios.defaults.baseURL = "http://localhost:5030";
+    axios.defaults.baseURL = "https://forgeapi.roushan.me/api";
     axios
       .get(`/getForm/${apiKey}`)
       .then((response) => {
@@ -57,7 +57,7 @@ const ForgeForms = ({ apiKey }) => {
     setCaptchaToken(token);
     try {
       const response = await axios.post(
-        "http://localhost:5030/api/verifyHCaptcha",
+        "https://forgeapi.roushan.me/api/verifyHCaptcha",
         {
           token: token,
         }
@@ -115,7 +115,7 @@ const ForgeForms = ({ apiKey }) => {
     // 2. Sending Data
     try {
       const response = await axios.post(
-        "http://localhost:5030/api/submitForm",
+        "https://forgeapi.roushan.me/api/submitForm",
         responseData
       );
 
