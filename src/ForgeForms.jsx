@@ -109,6 +109,8 @@ const ForgeForms = ({ apiKey }) => {
     // Prepare the response to be sent
     const responseData = {
       formId: originalResponse.id,
+      email: originalResponse.email,
+      formName: originalResponse.appName,
       response: Object.entries(formValues), // Convert form values to an array of [key, value] pairs
     };
 
