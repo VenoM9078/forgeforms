@@ -5,7 +5,7 @@ function App() {
   return (
     <div>
       <h1>My App</h1>
-      <ForgeForms apiKey="7b342411-44c3-4ce7-a4d9-bd0cf33a5930" />
+      <ForgeForms apiKey="19208b5e-596c-4522-a945-fa311dde51d5" />
     </div>
   );
 }
