@@ -6,7 +6,7 @@ import Question from "./pages/Question";
 
 function App() {
 
-  let clerkPubKey="pk_test_c3VwZXItd29sZi0xOC5jbGVyay5hY2NvdW50cy5kZXYk"
+  let clerkPubKey="pk_test_bWVhc3VyZWQtbW90aC00LmNsZXJrLmFjY291bnRzLmRldiQ"
   
   return (
     <BrowserRouter>

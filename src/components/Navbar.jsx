@@ -8,7 +8,7 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ user, showCreditsModal, setShowCreditsModal }) => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -264,10 +264,22 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <SignedIn>
+          <SignedIn>
+              <button
+                onClick={() => {
+                  setShowCreditsModal(true);
+                }}
+                style={{
+                  fontFamily: "FigTree",
+                }}
+                className="text-sm tracking-wider mr-6 font-semibold leading-6 bg-neutral-900 rounded-md text-white px-3 py-2"
+              >
+                {user?.total_credits} credits left
+              </button>{" "}
               <UserButton
                 afterSignOutUrl="/"
                 afterMultiSessionSingleSignOutUrl="/"
+                showName={false}
               />
             </SignedIn>
             <SignedOut>
