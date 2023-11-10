@@ -1,32 +1,35 @@
-import React from 'react'
 import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react"; 
-import HeroHome from "../components/HeroHome";
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import useUserStore from '../components/userStore';
+import { useUser } from "@clerk/clerk-react";
+// import HeroHome from "../components/HeroHome";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import useUserStore from "../components/userStore";
+import BuyCreditsModal from "../components/BuyCreditsModal";
 
 const Home = () => {
-
   const { setUserId, setUserAPIKey } = useUserStore();
   const { userId, userAPIKey } = useUserStore();
   const { fetchUser, user } = useUserStore();
-    // // User Id
-    const { user: clerkUser } = useUser();
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
 
-    useEffect(() => {
-      if (clerkUser) {
-        setUserId(clerkUser.id); // Update Zustand state
-        fetchUser(clerkUser.id);
-      }
-    }, [clerkUser, fetchUser, setUserId]);
-    console.log("This is The Clerk User: ", clerkUser);
+  // // User Id
+  const { user: clerkUser } = useUser();
+
+  useEffect(() => {
+    if (clerkUser) {
+      setUserId(clerkUser.id); // Update Zustand state
+      fetchUser(clerkUser.id);
+    }
+  }, [clerkUser, fetchUser, setUserId]);
+  console.log("This is The Clerk User: ", clerkUser);
   return (
     <>
-      <Navbar user={user}
+      <Navbar
+        user={user}
         showCreditsModal={showCreditsModal}
-        setShowCreditsModal={setShowCreditsModal} />
+        setShowCreditsModal={setShowCreditsModal}
+      />
 
       <BuyCreditsModal
         user={user}
@@ -40,7 +43,7 @@ const Home = () => {
 
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
