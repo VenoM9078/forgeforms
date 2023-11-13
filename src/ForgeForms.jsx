@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
-const ForgeForms = ({ apiKey }) => {
+const ForgeForms = ({ apiKey, showTitle }) => {
   const [formFields, setFormFields] = useState([]);
   const [originalResponse, setOriginalResponse] = useState([]);
   const [formTitle, setFormTitle] = useState("");
@@ -138,11 +138,11 @@ const ForgeForms = ({ apiKey }) => {
   return (
     <div className="custom-class">
       {error && (
-        <div className="rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
+        <div className="rpk-rounded-md rpk-bg-red-50 rpk-p-4">
+          <div className="rpk-flex">
+            <div className="rpk-flex-shrink-0">
               <svg
-                className="h-5 w-5 textRed-400"
+                className="rpk-h-5 rpk-w-5 rpk-text-red-400"
                 viewBox="0 0 20 20"
                 fill="red"
                 aria-hidden="true"
@@ -154,12 +154,15 @@ const ForgeForms = ({ apiKey }) => {
                 />
               </svg>
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
+            <div className="rpk-ml-3">
+              <h3 className="rpk-text-sm rpk-font-medium rpk-text-red-800">
                 There were errors with your submission
               </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <ul role="list" className="list-disc space-y-1 pl-5">
+              <div className="rpk-mt-2 rpk-text-sm rpk-text-red-700">
+                <ul
+                  role="list"
+                  className="rpk-list-disc rpk-space-y-1 rpk-pl-5"
+                >
                   {errorMsg.map((error, index) => (
                     <li key={index}>{error}</li>
                   ))}
@@ -170,9 +173,6 @@ const ForgeForms = ({ apiKey }) => {
         </div>
       )}
 
-      <h2 className="form-title">
-        {dataLoaded ? formTitle : <Skeleton width={200} />}
-      </h2>
       <form onSubmit={handleSubmit}>
         {formFields
           .filter((field) => field.id !== "terms&conditions")
