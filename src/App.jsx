@@ -7,13 +7,13 @@ import Question from "./pages/Question";
 function App() {
 
   let clerkPubKey = null;
-  // if (import.meta.env.VITE_ENV == "DEVELOPMENT") {
-  //   clerkPubKey = import.meta.env.VITE_APP_CLERK_FRONTEND_API_DEVELOPMENT;
-  // } else {
-  //   clerkPubKey = import.meta.env.VITE_APP_CLERK_FRONTEND_API_PRODUCTION;
-  // }
+  if (import.meta.env.VITE_ENV == "DEVELOPMENT") {
+    clerkPubKey = import.meta.env.VITE_APP_CLERK_FRONTEND_API_DEVELOPMENT;
+  } else {
+    clerkPubKey = import.meta.env.VITE_APP_CLERK_FRONTEND_API_PRODUCTION;
+  }
 
-  clerkPubKey = "pk_test_bWVhc3VyZWQtbW90aC00LmNsZXJrLmFjY291bnRzLmRldiQ"
+  // clerkPubKey = "pk_test_bWVhc3VyZWQtbW90aC00LmNsZXJrLmFjY291bnRzLmRldiQ"
 
   return (
     <BrowserRouter>
