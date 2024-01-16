@@ -88,7 +88,7 @@ export default function BuyCreditsModal({
                       </h2>
 
                       <a
-                        href={`https://axiomkit.lemonsqueezy.com/checkout/buy/0c73ee3a-1b9f-41ef-b67d-255c2816a17b?media=0&desc=0&discount=0`}
+                        href={`https://buy.stripe.com/test_28o3gigLbewWc0g5kk?client_reference_id=${user?.user_id}`}
                         target="_blank"
                         rel="noreferrer"
                         className="px-4 py-2 rounded-full bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-indigo-600 via-purple-700 to-pink-800 flex items-center gap-2 text-white font-medium"

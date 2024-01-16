@@ -19,9 +19,11 @@
     "react-dom": "^18.2.0",
     "react-filepond": "^7.1.2",
     "react-icons": "^4.8.0",
+    "react-loading-skeleton": "^3.3.1",
     "react-router-dom": "^6.9.0",
     "react-spinners": "^0.13.8",
     "react-text-loop": "^2.3.0",
+    "react-toastify": "^10.0.3",
     "react-type-animation": "^3.0.1",
     "windups": "^1.2.1",
     "zustand": "^4.4.6"

@@ -1,13 +1,14 @@
 import { WindupChildren } from "windups";
 import { useState } from "react";
 import { FaClipboard } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const TextLoadingAnimatiom = ({ query }) => {
   const [copied, setCopied] = useState(false);
   let splitQuery = [];
   console.log(query)
-  if (query && query.data) {
-    splitQuery = query.data.toString().split(";");
+  if (query) {
+    splitQuery = query.toString().split(";");
     console.log(splitQuery);
   } 
   
@@ -21,7 +22,7 @@ const TextLoadingAnimatiom = ({ query }) => {
     document.body.removeChild(el);
     setCopied(true);
     setTimeout(() => setCopied(false), 500);
-    window.alert('Text copied to clipboard!');
+    toast("Query is Copied to Clipboard.")
   };
 
   return (

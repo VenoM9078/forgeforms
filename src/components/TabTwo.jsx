@@ -3,18 +3,22 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "../custom-filepond.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FiUpload, FiCheck } from "react-icons/fi";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { useUser } from "@clerk/clerk-react";
+import axiosInstance from "../api/axiosInstance";
+import { useAuth } from "@clerk/clerk-react";
+import { toast } from 'react-toastify';
 
 registerPlugin(FilePondPluginFileValidateType);
 
 const TabTwo = () => {
 
+  const { getToken } = useAuth();
   const { user } = useUser();
   const [login, setLogin] = useState(user ? true : false);
+  const [token, setToken] = useState('');
 
   const navigate = useNavigate();
   const [schemaFile, setSchemaFile] = useState(null);
@@ -22,6 +26,8 @@ const TabTwo = () => {
   const [filePath, setFilePath] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
+  const [upload, setUpload] = useState(false);
+
 
   const handleFileUpload = (fileItems) => {
     if (fileItems.length > 0) {
@@ -31,8 +37,9 @@ const TabTwo = () => {
     }
   };
 
-  const handleUpload = (event) => {
+  const handleUpload = async (event) => {
     event.preventDefault();
+    const token = await getToken();
 
     //handle loading page
     setIsUploading(!isUploading);
@@ -44,11 +51,16 @@ const TabTwo = () => {
     }
 
     //request to handle route
-    axios
-      .post("http://localhost:8000/api/v1/queryformer/file/handle", {
+    axiosInstance
+      .post("/queryformer/file/handle", {
         fileName: fileName,
         filePath: filePath,
-        userId: user_id,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          mode: "cors",
+        },
       })
       .then((data) => {
         setIsUploading(!isUploading);
@@ -62,9 +74,25 @@ const TabTwo = () => {
           });
         }, 2000);
       })
-      .catch((err) => {
-        setIsUploading(!isUploading);
-        alert(err);
+      .catch((error) => {
+        setIsUploading(false);
+        setIsUploaded(false);
+        // toast(err.message);
+        if (error.response) {
+
+        
+          // Extract the message
+          const errorMessage = error.response.data.message;
+          toast(errorMessage)
+          // console.error("Extracted Message:", errorMessage);
+        } else if (error.request) {
+          console.error("Error Request:", error.request);
+          toast("Some Error Uploading File.")
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error Message:", error.message);
+          toast("Some Error Uploading File.")
+        }
       });
   };
 
@@ -81,7 +109,7 @@ const TabTwo = () => {
             allowMultiple={false}
             maxFileSize={maxFileSize}
             data-max-files={1}
-            server="http://localhost:8000/api/v1/queryformer/file/upload"
+            server={`${import.meta.env.VITE_BASE_URL_DEV}/queryformer/file/upload`}
             labelIdle='Drag & Drop your SQL schema file or <span class="filepond--label-action">Browse</span>'
             onupdatefiles={handleFileUpload}
             fileValidateTypeDetectType={(source, type) =>
@@ -100,53 +128,18 @@ const TabTwo = () => {
                 // console.log(jsonObject)
                 setFileName(jsonObject.file);
                 setFilePath(jsonObject.filePath);
+                setUpload(true);
               }
+              else {
+                setUpload(false);
+              }
+
             }}
           />
 
-          <SignedIn>
-            <button
-              className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
-              type="submit"
-              onClick={handleUpload}
-              disabled={isUploading || isUploaded}
-            >
-              {isUploading ? (
-                <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
-                  ></path>
-                </svg>
-              ) : (
-                <>
-                  <FiUpload className="mr-2 h-5 w-5" />{" "}
-                </>
-              )}
-              {isUploaded ? (
-                <FiCheck className="mr-2 h-5 w-5" />
-              ) : (
-                <span>Upload</span>
-              )}
-            </button>
-          </SignedIn>
-          <SignedOut>
-            {" "}
-            <SignInButton
-              afterSignInUrl="/"
-              afterSignUpUrl="/"
-              mode="modal"
-            >
-              {login ? <button
+          {schemaFile && upload && <>
+            <SignedIn>
+              <button
                 className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
                 type="submit"
                 onClick={handleUpload}
@@ -178,11 +171,54 @@ const TabTwo = () => {
                 ) : (
                   <span>Upload</span>
                 )}
-              </button> : <a
-                className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
-              >Sign In</a>}
-            </SignInButton>
-          </SignedOut>
+              </button>
+            </SignedIn>
+            <SignedOut>
+              {" "}
+              <SignInButton
+                afterSignInUrl="/"
+                afterSignUpUrl="/"
+                mode="modal"
+              >
+                {login ? <button
+                  className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
+                  type="submit"
+                  onClick={handleUpload}
+                  disabled={isUploading || isUploaded}
+                >
+                  {isUploading ? (
+                    <svg className="mr-2 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm12 0a8 8 0 100-16 8 8 0 000 16zM3.27 20a10 10 0 0017.46-6H18a6 6 0 01-6 6H9a6 6 0 01-5.99-5.775L3.27 20z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <>
+                      <FiUpload className="mr-2 h-5 w-5" />{" "}
+                    </>
+                  )}
+                  {isUploaded ? (
+                    <FiCheck className="mr-2 h-5 w-5" />
+                  ) : (
+                    <span>Upload</span>
+                  )}
+                </button> : <a
+                  className="inline-flex items-center rounded bg-purple-400 py-2 px-6 font-bold text-white hover:bg-purple-500"
+                >Sign In</a>}
+              </SignInButton>
+            </SignedOut>
+          </>
+          }
         </form>
       </div>
     </>

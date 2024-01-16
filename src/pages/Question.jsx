@@ -1,16 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import TextLoadingAnimatiom from "../components/TextLoadingAnimation";
+// import TextLoadingAnimatiom from "../components/TextLoadingAnimation";
 import { useLocation } from "react-router-dom";
 import { WindupChildren } from "windups";
 import TextLoop from "react-text-loop";
+import useUserStore from "../userStore";
+import axiosInstance from "../api/axiosInstance";
+import { useAuth } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
+import ReviewModal from "../components/ReviewModal";
+import Notification from "../components/Notification";
 
 const Question = () => {
+  const { getToken } = useAuth();
+  const { setUserId, fetchUser, user } = useUserStore();
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+
+  // Review
+  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState({
+    message: "",
+    title: "",
+  });
+
+  const [showModal, setShowModal] = useState(false);
+  const hasReviewed = useUserStore((state) => state.hasReviewed);
+
+  
+  useEffect(() => {
+    // Set a timeout to show the review modal after 5-10 seconds
+    // console.log("hasReviewed", hasReviewed());
+    const delay = Math.random() * (10000 - 5000) + 5000; // Random delay between 5-10 seconds
+    const timer = setTimeout(() => {
+      // console.log("Review try run with delay of", delay);
+      if (!hasReviewed()) {
+        setShowModal(true); // Show modal only if user hasn't reviewed
+      }
+      // console.log("Modal value: ", showModal);
+    }, delay);
+
+    return () => clearTimeout(timer); // Cleanup the timer
+  }, []);
+
+  useEffect(() => {
+    // Set a timeout to automatically close the notification after 5 seconds
+    if (showNotification) {
+      const timer = setTimeout(() => {
+        setShowNotification(false);
+      }, 5000); // 5000 milliseconds = 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showNotification]);
+
+  // // User Id
+  const { user: clerkUser } = useUser();
+
+  useEffect(() => {
+    if (clerkUser) {
+      setUserId(clerkUser.id); // Update Zustand state
+      fetchUser(clerkUser.id);
+    }
+  }, [clerkUser, fetchUser, setUserId]);
   const location = useLocation();
 
   const schema = location.state.schema;
-  const promptStart = `Here is my SQL Schema : "${schema}" ,of relational database and now I would like to ask some questions or queries based on that provided schema. My Question is : `;
+  const promptStart = `"${schema}" `;
 
   const [loading, setLoading] = useState(false);
   const [userPrompt, setPrompt] = useState("");
@@ -20,49 +76,47 @@ const Question = () => {
     setPrompt(e.target.value);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
+    const token = await getToken();
     event.preventDefault();
 
     if (userPrompt.trim() === "") {
       return window.alert("Please enter prompt");
     }
 
+    setLoading(true);
     const promptParams = `${promptStart} ${userPrompt}.`;
     console.log(promptParams);
 
     const requestBody = JSON.stringify({ query: promptParams });
 
-    fetch("http://localhost:8000/api/v1/queryformer/schema-query", {
-      method: "POST",
+    axiosInstance.post("/queryformer/schema-query", requestBody, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        mode: "cors",
       },
-      body: requestBody,
     })
-      .then((response) => {
-        setLoading(true);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((res) => {
+      .then((responce) => {
         // setResult([...result, data]);
-        console.log(res.data.content);
-        setResult(res.data.content);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 1500);
+        console.log(responce.data.data.content);
+        setResult(responce.data.data.content);
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
+        toast("Error, Please try again later.")
         console.error(error);
       });
   }
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        user={user}
+        showCreditsModal={showCreditsModal}
+        setShowCreditsModal={setShowCreditsModal}
+      />
       <div className="conatiner mx-auto border-gray-900">
         <div className="px-50 relative isolate pt-14 lg:px-8">
           <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
@@ -111,7 +165,7 @@ const Question = () => {
 
               <p className="mt-6 px-20 text-lg leading-8 text-gray-600">
                 Decipher the Magic of Schema: Your Key to Unlocking Complexities,
-                 Empowering Understanding and Expertise in a Seamless Journey.
+                Empowering Understanding and Expertise in a Seamless Journey.
               </p>
 
               <QuerySection handleSubmit={handleSubmit} handleInput={handleInput} userPrompt={userPrompt} loading={loading} result={result} />
@@ -120,6 +174,19 @@ const Question = () => {
         </div>
       </div>
       <Footer />
+      {showModal && (
+          <ReviewModal
+            setNotification={setNotification}
+            setShowNotification={setShowNotification}
+            setShowModal={setShowModal}
+          />
+        )}
+        {showNotification && (
+          <Notification
+            title={notification.title}
+            message={notification.message}
+          />
+        )}
     </>
   );
 };
